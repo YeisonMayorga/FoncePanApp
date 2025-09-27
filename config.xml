@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.FoncePan.app" version="1.5.4" android-versionCode="21" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>FoncePan</name>
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    <content src="login.html" />
+    
+    
+    <icon src="resources/favicon-96x96.png" width="96" height="96"/>
+    
+    <icon src="resources/web-app-manifest-192x192.png" width="192" height="192"/>
+    <icon src="resources/web-app-manifest-512x512.png" width="512" height="512"/>
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+</widget>

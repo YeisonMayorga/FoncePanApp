@@ -1,0 +1,24 @@
+
+body {
+  background-color: #f8f9fa;
+  font-family: times;
+}
+
+h2 {
+  font-weight: bold;
+  color: #343a40;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+h4 {
+  text-align: center;
+}

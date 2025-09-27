@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cordova
+platforms/
+plugins/
+
+# Electron
+dist/
+build/
+*.exe
+*.dll
+
+# Sistema
+.DS_Store
+Thumbs.db
