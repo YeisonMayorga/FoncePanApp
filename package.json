@@ -1,7 +1,7 @@
 {
   "name": "foncepan",
   "displayName": "FoncePan",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "Gestión FoncePan",
   "main": "main.js",
   "scripts": {

@@ -306,7 +306,7 @@ let productosDisponibles3 = [];
   const productosDisponibles1 = await obtenerProductosnTrue1();
   const productosDisponibles2 = await obtenerProductosnTrue2();
   const productosDisponibles3 = await obtenerProductosnTrue3();
-
+  console.log("Productos true",productosDisponibles1);
   const cuerpo1 = $('#tablaProductosSolicitud1 tbody');
   const cuerpo2 = $('#tablaProductosSolicitud2 tbody');
   const cuerpo3 = $('#tablaProductosSolicitud3 tbody');
@@ -321,6 +321,7 @@ let productosDisponibles3 = [];
         <td>${p.nombre_producto}</td>
         <td>${p.provedor_producto}</td>
         <td>${p.nombre_um}</td>
+        <td>${p.und_producto}</td>
         <td>
           <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" min="0" value="0">
         </td>
@@ -334,6 +335,7 @@ let productosDisponibles3 = [];
         <td>${p.nombre_producto}</td>
         <td>${p.provedor_producto}</td>
         <td>${p.nombre_um}</td>
+        <td>${p.und_producto}</td>
         <td>
           <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" min="0" value="0">
         </td>
@@ -347,6 +349,7 @@ let productosDisponibles3 = [];
         <td>${p.nombre_producto}</td>
         <td>${p.provedor_producto}</td>
         <td>${p.nombre_um}</td>
+        <td>${p.und_producto}</td>
         <td>
           <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" min="0" value="0">
         </td>
@@ -354,6 +357,21 @@ let productosDisponibles3 = [];
     `);
   });
 }
+
+// 🔍 Filtrado global para las 3 tablas
+$(document).on('input', '#buscadorProductos', function() {
+  const texto = $(this).val().toLowerCase();
+
+  // Filtra todas las filas de las 3 tablas
+  ['#tablaProductosSolicitud1', '#tablaProductosSolicitud2', '#tablaProductosSolicitud3'].forEach(id => {
+    $(`${id} tbody tr`).each(function() {
+      const fila = $(this);
+      const textoFila = fila.text().toLowerCase();
+      fila.toggle(textoFila.includes(texto));
+    });
+  });
+});
+
 
 $(document).ready(async () => {
 await cargarTablasProductos();

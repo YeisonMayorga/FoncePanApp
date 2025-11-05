@@ -61,25 +61,40 @@ const channel = supabase
   .subscribe();
 
   const tabla = $('#tablaDespachosAdmin').DataTable({
-    ajax: async (data, callback) => {
-      const datos = await obtenerDespachosAdmin();
-      const despachosFormateados = datos.map(item => {
-  const fecha = new Date(item.fecha_solicitud);
-  const fechaFormateada = fecha.toLocaleString("es-CO", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+        ajax: async (data, callback) => {
+          const datos = await obtenerDespachosAdmin();
 
-  return {
-    ...item,
-    fecha_solicitud_formateada: fechaFormateada
-  };
-});
-      callback({ data: despachosFormateados });
-    },
+          // Para cada despacho, trae los productos asociados (solo sus nombres)
+          const despachosFormateados = await Promise.all(
+            datos.map(async item => {
+              const { data: productos, error } = await supabase
+                .schema('inventario')
+                .from('detalle_despacho')
+                .select('productosn(nombre_producto)')
+                .eq('id_despacho', item.id_despacho);
+
+              const nombresProductos = productos?.map(p => p.productosn.nombre_producto).join(', ') || '';
+
+              const fecha = new Date(item.fecha_solicitud);
+              const fechaFormateada = fecha.toLocaleString("es-CO", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+              });
+
+              return {
+                ...item,
+                fecha_solicitud_formateada: fechaFormateada,
+                productos_texto: nombresProductos.toLowerCase() // 🔍 agregamos para búsqueda
+              };
+            })
+          );
+
+          callback({ data: despachosFormateados });
+        },
+
         language: {
         lengthMenu: "Mostrar _MENU_ registros por página",
         zeroRecords: "No se encontraron resultados",
@@ -130,6 +145,34 @@ const channel = supabase
           }
     ]
   });
+
+// 🔍 Buscador personalizado
+$('#buscadorProductos').on('input', function() {
+  const filtro = $(this).val().toLowerCase().trim();
+
+  // Recorremos todas las filas visibles del DataTable
+  $('#tablaDespachosAdmin').DataTable().rows().every(function() {
+    const data = this.data();
+    const textoGeneral = Object.values(data)
+      .filter(v => v != null)
+      .join(' ')
+      .toLowerCase();
+
+    const productosTexto = (data.productos_texto || '').toLowerCase();
+
+    // Si el filtro está contenido en cualquier campo o en productos_texto, se muestra
+    const coincide = textoGeneral.includes(filtro) || productosTexto.includes(filtro);
+
+    if (coincide) {
+      $(this.node()).show();
+    } else {
+      $(this.node()).hide();
+    }
+  });
+});
+
+
+
 console.log(obtenerDespachosAdmin());
   // Mostrar modal con detalle
 
