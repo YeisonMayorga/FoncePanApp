@@ -1,24 +1,19 @@
 import { supabase } from './app.js';
+
 window.addEventListener('DOMContentLoaded', async () => {
-      // Ocultar por defecto (opcional si quieres más control)
-  document.getElementById('btn-inventario-frio').style.display = 'none';
-  document.getElementById('btn-inventario').style.display = 'none';
-  document.getElementById('btn-estadistica').style.display = 'none';
-  document.getElementById('btn-despachoSucursal').style.display = 'none';
-  document.getElementById('btn-despachoAdmin').style.display = 'none';
-    document.getElementById('btn-controlDespacho').style.display = 'none';
+  await checkAuthAndRole();
 });
-checkAuthAndRole();
 
 async function checkAuthAndRole() {
   const { data: { session } } = await supabase.auth.getSession();
+
+  // Si no hay sesión, redirige
   if (!session) {
     window.location.href = 'login.html';
     return;
   }
 
   const userId = session.user.id;
-  console.log(userId);
   const { data: user, error } = await supabase
     .schema('inventario')
     .from('usuarios')
@@ -26,54 +21,75 @@ async function checkAuthAndRole() {
     .eq('id', userId)
     .single();
 
+  // Si falla o no hay usuario, redirige
   if (error || !user) {
     window.location.href = 'login.html';
-    console.log('inicio sesion no exitosa usuario');
     return;
   }
 
+  // ✅ Oculta el loader y muestra el contenedor principal
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('contenedor-botones').style.display = 'flex';
+  console.log('Rol del usuario',user.id_rol)
+  // 🎯 Mostrar según el rol
+  switch (user.id_rol) {
+    case 1: // admin
+    case 4: // otro rol con mismos permisos
+      mostrar([
+        'btn-inventario-frio',
+        'btn-inventario',
+        'btn-estadistica',
+        'btn-despachoAdmin',
+        'btn-controlDespacho',
+        //'btn-clientes',
+        //'btn-congelacion',
+        //'btn-pedidosProduccion'
+      ]);
+      break;
 
+    case 2: // sucursal
+      mostrar([
+        'btn-despachoSucursal',
+        //'btn-pedidosSucursal'
+      ]);
+      break;
 
-    // Mostrar según el rol
-  if (user.id_rol === 1) {
-    document.getElementById('btn-inventario-frio').style.display = 'inline-block';
-    document.getElementById('btn-inventario').style.display = 'inline-block';
-    document.getElementById('btn-estadistica').style.display = 'inline-block';
-    document.getElementById('btn-despachoAdmin').style.display = 'inline-block';
-    
-    document.getElementById('btn-controlDespacho').style.display = 'inline-block';
-  }
-  if (user.id_rol === 4) {
-    document.getElementById('btn-inventario-frio').style.display = 'inline-block';
-    document.getElementById('btn-inventario').style.display = 'inline-block';
-    document.getElementById('btn-estadistica').style.display = 'inline-block';
-    document.getElementById('btn-despachoAdmin').style.display = 'inline-block';
-    
-    document.getElementById('btn-controlDespacho').style.display = 'inline-block';
-  }
-  if (user.id_rol === 2) {
-    document.getElementById('btn-despachoSucursal').style.display = 'inline-block';
-  }
-  if (user.id_rol === 5) {
-    document.getElementById('btn-inventario').style.display = 'inline-block';
-    document.getElementById('btn-despachoAdmin').style.display = 'inline-block';
-  }
-  if (user.id_rol === 3) {
-    document.getElementById('btn-inventario-frio').style.display = 'inline-block';
-  }
+    case 5: // inventario + despacho admin
+      mostrar([
+        'btn-inventario', 
+        'btn-despachoAdmin'
+      ]);
+      break;
 
-  console.log('inicio sesion exitosa admin');
+    case 3: // frio
+      mostrar(['btn-inventario-frio']);
+      break;
+
+    case 6: // frio
+      mostrar(['btn-congelacion']);
+      break; 
+
+    case 7: // frio
+      mostrar(['btn-pedidosProduccion']);
+      break;          
+    default:
+      console.warn('Rol desconocido:', user.id_rol);
+  }
 }
 
+function mostrar(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'inline-block';
+  });
+}
 
+// 🚪 Cerrar sesión
 document.getElementById('logout-btn').addEventListener('click', async () => {
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.error('Error al cerrar sesión:', error.message);
     alert('No se pudo cerrar sesión. Intenta de nuevo.');
-    window.location.href = 'login.html';
-  } else {
-    window.location.href = 'login.html';
   }
+  window.location.href = 'login.html';
 });
-

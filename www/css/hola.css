@@ -42,6 +42,7 @@ body {
 }
 /* Botones */
 .btn1 {
+    
     cursor: pointer;
     padding: 20px;
     background: #71ff84;
@@ -49,13 +50,22 @@ body {
     border-radius: 10px 0 0 10px;
     transition: all 0.3s ease;
     position: relative;
-    display: flex;
+    display: none;
     flex-direction: column; /* Para poner imagen arriba del texto */
     align-items: center;
     justify-content: center;
     width: 170px; /* Tamaño fijo */
     height: 160px;
     text-align: center;
+}
+#loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  color: #333;
+  font-weight: 500;
 }
 
 /* Efectos de los bordes */

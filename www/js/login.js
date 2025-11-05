@@ -10,13 +10,6 @@ const selectUsuarios = document.getElementById('usuario-guardado');
 // === 1. Poblar usuarios recordados ===
 document.addEventListener('DOMContentLoaded', () => {
 
-
-
-
-
-
-
-
   const usuarios = JSON.parse(localStorage.getItem('usuariosRecordados') || '[]');
 
   usuarios.forEach(u => {
