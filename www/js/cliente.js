@@ -1,7 +1,6 @@
 import {obtenerProductos, agregarProducto, actualizarProducto, eliminarProducto, agregarEntrada, agregarSalida, supabase, obtenerStockProducto } from './app.js';
-
+import {obtenerEntradas} from '../backend/endpoints/cliente.js';
 let productosGlobal = []; // Declara variable para guardar datos de los productos
-
 $(document).ready(async function () {
 
     let rolUsuario;

@@ -1,157 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Despachos - Administrador</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/despachoadmin.css">
-  <link rel="stylesheet" href="css/casa.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
-  <!-- Estilos opcionales -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-</head>
-<body>
-            <a href="home.html" class="home-button">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/despachoadmin.css">
+        <link rel="stylesheet" href="css/casa.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <title>Despachos - Administrador</title>
+    </head>
+    <body>
+        <a href="home.html" class="home-button">
             <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
-          </a>
-          <!-- Campana de notificaciones -->
-<div class="position-fixed top-0 end-0 p-3 z-3" style="z-index: 1055;">
-  <button class="btn btn-light position-relative" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
-    <i class="bi bi-bell-fill fs-4"></i>
-    <span id="contadorNotificaciones" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">
-      0
-    </span>
-  </button>
-</div>
-
-<!-- Modal de notificaciones -->
-<div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Notificaciones</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <ul id="listaNotificaciones" class="list-group list-group-flush"></ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-  <div class="container py-4">
-    <h2 class="mb-4">Solicitudes de Despacho</h2>
-  <div class="mb-3">
-    <input id="buscadorProductos" type="text" class="form-control" placeholder="Buscar por producto o sucursal...">
-  </div>
-    <table id="tablaDespachosAdmin" class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Sucursal</th>
-          <th>Fecha</th>
-          <th>Estado</th>
-          <th>Productos</th>
-          <th>Total Solicitado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <!-- Modal Detalle Despacho -->
-  <div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Detalle del Despacho</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </a>
+        <!-- Campana de notificaciones -->
+        <div class="position-fixed top-0 end-0 p-3 z-3" style="z-index: 1055;">
+            <button class="btn btn-light position-relative" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
+                <i class="bi bi-bell-fill fs-4"></i>
+                <span id="contadorNotificaciones" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">
+                0
+                </span>
+            </button>
         </div>
-        <div class="modal-body">
-          <div>
-            <h4>Punto de venta</h4>
-            <table class="table table-sm" id="tablaDetalleProductos">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Existencia</th>
-                  <th>Cant. Solicitada</th>
-                  <th>Cant. Enviada</th>
-                  <th>Cant. Recibida</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>            
-          </div>
-          <div>
-            <h4>Panadería</h4>
-            <table class="table table-sm" id="tablaDetalleProductos2">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Existencia</th>
-                  <th>Cant. Solicitada</th>
-                  <th>Cant. Enviada</th>
-                  <th>Cant. Recibida</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>            
-          </div>
-          <div>
-            <h4>Bebidas</h4>
-            <table class="table table-sm" id="tablaDetalleProductos3">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Existencia</th>
-                  <th>Cant. Solicitada</th>
-                  <th>Cant. Enviada</th>
-                  <th>Cant. Recibida</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>            
-          </div>
+        <!-- Modal de notificaciones -->
+        <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Notificaciones</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="listaNotificaciones" class="list-group list-group-flush"></ul>
+                </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          
-          <button id="btnFinalizarDespacho" class="btn btn-success" style="display: none;">Finalizar despacho</button>
-
-          <button id="btnEnviarRespuesta" class="btn btn-primary">Enviar Respuesta</button>
-          
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <div class="container py-4">
+            <h2 class="mb-4">Solicitudes de Despacho</h2>
+            <div class="mb-3">
+                <input id="buscadorProductos" type="text" class="form-control" placeholder="Buscar por producto o sucursal...">
+            </div>
+            <table id="tablaDespachosAdmin" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>Sucursal</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Productos</th>
+                <th>Total Solicitado</th>
+                <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            </table>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Ver Devolución -->
-<div class="modal fade" id="modalVerDevolucion" tabindex="-1" aria-labelledby="modalVerDevolucionLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalVerDevolucionLabel">Detalles de la Devolución</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Observaciones:</strong> <span id="observacionesDevolucion"></span></p>
-        <hr>
-        <h6>Productos devueltos:</h6>
-        <div id="listaProductosDevueltos"></div>
-      </div>
-    </div>
-  </div>
-</div>
-  <script src="cordova.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-  <script type="module" src="js/despachoadmin.js"></script>
-</body>
+        <!-- Modal Detalle Despacho -->
+        <div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalle del Despacho</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h4>Punto de venta</h4>
+                            <table class="table table-sm" id="tablaDetalleProductos">
+                            <thead>
+                                <tr>
+                                <th>Producto</th>
+                                <th>Existencia</th>
+                                <th>Cant. Solicitada</th>
+                                <th>Cant. Enviada</th>
+                                <th>Cant. Recibida</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            </table>            
+                        </div>
+                        <div>
+                            <h4>Panadería</h4>
+                            <table class="table table-sm" id="tablaDetalleProductos2">
+                            <thead>
+                                <tr>
+                                <th>Producto</th>
+                                <th>Existencia</th>
+                                <th>Cant. Solicitada</th>
+                                <th>Cant. Enviada</th>
+                                <th>Cant. Recibida</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            </table>            
+                        </div>
+                        <div>
+                            <h4>Bebidas</h4>
+                            <table class="table table-sm" id="tablaDetalleProductos3">
+                            <thead>
+                                <tr>
+                                <th>Producto</th>
+                                <th>Existencia</th>
+                                <th>Cant. Solicitada</th>
+                                <th>Cant. Enviada</th>
+                                <th>Cant. Recibida</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            </table>            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnFinalizarDespacho" class="btn btn-success" style="display: none;">Finalizar despacho</button>
+                        <button id="btnEnviarRespuesta" class="btn btn-primary">Enviar Respuesta</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Ver Devolución -->
+        <div class="modal fade" id="modalVerDevolucion" tabindex="-1" aria-labelledby="modalVerDevolucionLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVerDevolucionLabel">Detalles de la Devolución</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Observaciones:</strong> <span id="observacionesDevolucion"></span></p>
+                        <hr>
+                        <h6>Productos devueltos:</h6>
+                        <div id="listaProductosDevueltos"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="cordova.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+        <script type="module" src="js/despachoadmin.js"></script>
+    </body>
 </html>

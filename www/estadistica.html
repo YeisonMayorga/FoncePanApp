@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gráficas de Inventario</title>
+        <link rel="shortcut icon" href="./img/LOGO.png" type="image/x-icon"> 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="css/estadistica.css">
+    </head>
+    <body>
+        <a href="home.html" class="home-button">
+            <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
+        </a>
+        <div class="container-fluid">
+            <h2 class="mb-4 text-center">📊 Análisis de Movimiento de Productos Frios</h2>
+            <div class="filter-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="productSelect" class="form-label">Seleccionar Producto</label>
+                        <select id="productSelect" class="form-select select2">
+                            <option value="">Cargando productos...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="timeRange" class="form-label">Rango de Fechas</label>
+                        <input type="text" id="timeRange" class="form-control" placeholder="Seleccionar rango">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button id="applyFilters" class="btn btn-primary btn-apply">Aplicar Filtros</button>
+                    </div>
+                </div>                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label class="form-label">Período de Tiempo:</label>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary time-period-btn active" data-period="day">Días</button>
+                            <button type="button" class="btn btn-outline-primary time-period-btn" data-period="week">Semanas</button>
+                            <button type="button" class="btn btn-outline-primary time-period-btn" data-period="month">Meses</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="grafica1" class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Movimiento del Producto (Entradas vs Salidas)
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="movementChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div  class="row">
+                <div id="grafica2" class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Stock Actual
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="stockChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="grafica3" class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Balance Neto (Entradas - Salidas)
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="balanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Apartado para el inventario normal-->
+        <div class="container-fluid">
+            <h2 class="mb-4 text-center">📊 Análisis de Movimiento de Productos</h2>
+            <div class="filter-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="productSelect" class="form-label">Seleccionar Producto</label>
+                        <select id="productSelect1" class="form-select select2">
+                            <option value="">Cargando productos...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="timeRange" class="form-label">Rango de Fechas</label>
+                        <input type="text" id="timeRange1" class="form-control" placeholder="Seleccionar rango">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button id="applyFilters1" class="btn btn-primary btn-apply">Aplicar Filtros</button>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label class="form-label">Período de Tiempo:</label>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary time-period-btn1 active" data-period="day">Días</button>
+                            <button type="button" class="btn btn-outline-primary time-period-btn1" data-period="week">Semanas</button>
+                            <button type="button" class="btn btn-outline-primary time-period-btn1" data-period="month">Meses</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="grafica4" class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Movimiento del Producto (Entradas vs Salidas)
+                        </div>
+                        <div class="card-body">
+                            <div   class="chart-container">
+                                <canvas id="movementChart1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div  class="row">
+                <div id="grafica5" class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Stock Actual
+                        </div>
+                        <div class="card-body">
+                            <div  class="chart-container">
+                                <canvas id="stockChart1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="grafica6" class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Balance Neto (Entradas - Salidas)
+                        </div>
+                        <div class="card-body">
+                            <div  class="chart-container">
+                                <canvas id="balanceChart1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="cordova.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script> 
+        <script src="js/estadistica.js" type="module"></script>
+    </body>
+</html>

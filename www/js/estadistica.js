@@ -1,61 +1,28 @@
 
 import { supabase } from './app.js';
-// Reemplaza tus imports con estas líneas:
-
-
-// Si jsPDF se carga como UMD, podrías necesitar esto:
-
-// Importaciones CORRECTAS de Chart.js
-import { 
-    Chart,
-    LinearScale,
-    CategoryScale,
-    BarController,
-    BarElement,
-    LineController,
-    LineElement,
-    PointElement,
-    Legend,
-    Tooltip,
-    Filler // <-- Añade esta importación
-  } from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/+esm';
-  
-  // Registra los componentes necesarios
-  Chart.register(
-    LinearScale,
-    CategoryScale,
-    BarController,
-    BarElement,
-    LineController,
-    LineElement,
-    PointElement,
-    Legend,
-    Tooltip,
-    Filler // <-- Añade esto al registro
-  );
-
-// Variables globales
+import { Chart, LinearScale, CategoryScale, BarController, BarElement, LineController, LineElement, PointElement, Legend, Tooltip, Filler} from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/+esm';
+// Registra los componentes necesarios
+Chart.register(LinearScale, CategoryScale, BarController, BarElement, LineController, LineElement, PointElement, Legend, Tooltip, Filler);
+// Variables globales Frio
 let movementChart, stockChart, balanceChart;
 let selectedProductId = null;
 let currentPeriod = 'day';
-
+// Variables globales Bodega
 let movementChart1, stockChart1, balanceChart1;
 let selectedProductId1 = null;
 let currentPeriod1 = 'day';
 // Inicialización
 document.addEventListener('DOMContentLoaded', async function() {
+    // Inicializar Frio
     await initSelect2();
     initDatePicker();
     setupEventListeners();
-    
-    // Cargar datos iniciales (últimos 30 días)
     loadInitialData();
-
-        // Inicializar el segundo inventario
-        await initSelect2_1();
-        initDatePicker1();
-        setupEventListeners1();
-        loadInitialData1();
+    // Inicializar Bodega
+    await initSelect2_1();
+    initDatePicker1();
+    setupEventListeners1();
+    loadInitialData1();
 });
 
 // Inicializar Select2 para búsqueda de productos
@@ -65,20 +32,16 @@ async function initSelect2() {
         .from('productos')
         .select('id_producto, nombre_producto')
         .order('nombre_producto', { ascending: true });
-    
     const productSelect = $('#productSelect');
     productSelect.empty();
     productSelect.append('<option value="">Seleccione un producto</option>');
-    
     productos.forEach(producto => {
         productSelect.append(`<option value="${producto.id_producto}">${producto.nombre_producto}</option>`);
     });
-    
     productSelect.select2({
         placeholder: "Buscar producto...",
         allowClear: true
     });
-    
     productSelect.on('change', function() {
         selectedProductId = $(this).val();
         if (selectedProductId) {
@@ -86,7 +49,6 @@ async function initSelect2() {
         }
     });
 }
-
 // Inicializar el selector de fechas
 function initDatePicker() {
     flatpickr("#timeRange", {
@@ -101,7 +63,6 @@ function initDatePicker() {
         }
     });
 }
-
 // Configurar event listeners
 function setupEventListeners() {
     // Botones de período de tiempo
@@ -111,11 +72,9 @@ function setupEventListeners() {
         currentPeriod = $(this).data('period');
         updateCharts();
     });
-    
     // Botón aplicar filtros
     $('#applyFilters').on('click', updateCharts);
 }
-
 // Cargar datos iniciales
 async function loadInitialData() {
     // Seleccionar el primer producto por defecto
@@ -125,20 +84,16 @@ async function loadInitialData() {
         .select('id_producto')
         .order('nombre_producto', { ascending: true })
         .limit(1);
-    
     if (productos && productos.length > 0) {
         selectedProductId = productos[0].id_producto;
         $('#productSelect').val(selectedProductId).trigger('change');
     }
 }
-
 // Actualizar todas las gráficas
 async function updateCharts() {
     if (!selectedProductId) return;
-    
     const dateRange = $('#timeRange').val();
     let startDate, endDate;
-    
     if (dateRange) {
         const dates = dateRange.split(' a ');
         startDate = new Date(dates[0].split('/').reverse().join('-'));
@@ -164,13 +119,10 @@ async function updateCharts() {
         // Actualizar el datepicker
         $("#timeRange").flatpickr().setDate([startDate, endDate]);
     }
-    
     // Obtener datos de entradas y salidas
     const { entradas, salidas } = await fetchMovementData(selectedProductId, startDate, endDate);
-    
     // Procesar datos según el período seleccionado
     const processedData = processDataForPeriod(entradas, salidas, startDate, endDate, currentPeriod);
-    
     // Actualizar gráficas
     updateMovementChart(processedData);
     updateStockChart(processedData);
@@ -206,10 +158,7 @@ async function fetchMovementData(productId, startDate, endDate) {
     
     return { entradas, salidas };
 }
-
-
 // En la función processDataForPeriod, modifiqué el manejo de fechas:
-
 function processDataForPeriod(entradas, salidas, startDate, endDate, period) {
     const result = {
         labels: [],
@@ -219,67 +168,62 @@ function processDataForPeriod(entradas, salidas, startDate, endDate, period) {
     };
 
     // Nueva función para ajustar la fecha y evitar el desplazamiento
-function adjustDate(dateString) {
-    if (typeof dateString !== 'string') {
-        console.warn('Fecha no es string:', dateString);
-        return new Date(NaN);
-    }
-
-    // Eliminar microsegundos si existen (más de 3 decimales)
-    const cleaned = dateString.replace(/(\\.\\d{3})\\d+/, '$1');
-
-    const date = new Date(cleaned);
-    if (isNaN(date)) {
-        console.warn('No se pudo interpretar la fecha:', dateString);
-        return new Date(NaN);
-    }
-    return date;
-}
-
-    console.log('Fecha modificada', adjustDate)
-const groupData = (data, dateField, valueField) => {
-    const grouped = {};
-
-    data.forEach(item => {
-        const rawDate = item[dateField];
-        if (!rawDate) {
-            console.warn('Fecha inválida (vacía o null):', item);
-            return;
+    function adjustDate(dateString) {
+        if (typeof dateString !== 'string') {
+            console.warn('Fecha no es string:', dateString);
+            return new Date(NaN);
         }
 
-        const date = adjustDate(rawDate);
+        // Eliminar microsegundos si existen (más de 3 decimales)
+        const cleaned = dateString.replace(/(\\.\\d{3})\\d+/, '$1');
+
+        const date = new Date(cleaned);
         if (isNaN(date)) {
-            console.warn('Fecha inválida (NaN):', rawDate);
-            return;
+            console.warn('No se pudo interpretar la fecha:', dateString);
+            return new Date(NaN);
         }
+        return date;
+    }
+    console.log('Fecha modificada', adjustDate)
+    const groupData = (data, dateField, valueField) => {
+        const grouped = {};
 
-        let key;
-        switch (period) {
-            case 'day':
-                key = date.toISOString().split('T')[0];
-                break;
-            case 'week':
-                const year = date.getFullYear();
-                const week = getWeekNumber(date)[1];
-                key = `${year}-W${week.toString().padStart(2, '0')}`;
-                break;
-            case 'month':
-                key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-                break;
-        }
+        data.forEach(item => {
+            const rawDate = item[dateField];
+            if (!rawDate) {
+                console.warn('Fecha inválida (vacía o null):', item);
+                return;
+            }
 
-        if (!grouped[key]) {
-            grouped[key] = 0;
-        }
-        grouped[key] += item[valueField];
-    });
+            const date = adjustDate(rawDate);
+            if (isNaN(date)) {
+                console.warn('Fecha inválida (NaN):', rawDate);
+                return;
+            }
 
-    return grouped;
-};
-    
-    // Resto de la función permanece igual...
-    // ...
-      
+            let key;
+            switch (period) {
+                case 'day':
+                    key = date.toISOString().split('T')[0];
+                    break;
+                case 'week':
+                    const year = date.getFullYear();
+                    const week = getWeekNumber(date)[1];
+                    key = `${year}-W${week.toString().padStart(2, '0')}`;
+                    break;
+                case 'month':
+                    key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                    break;
+            }
+
+            if (!grouped[key]) {
+                grouped[key] = 0;
+            }
+            grouped[key] += item[valueField];
+        });
+
+        return grouped;
+    };  
     // Agrupar entradas y salidas
     const groupedEntradas = groupData(entradas, 'fecha_entrada', 'und_entrada');
     const groupedSalidas = groupData(salidas, 'fecha_salida', 'und_salida');
@@ -346,14 +290,11 @@ function compareWeekKeys(a, b) {
 }
 
 function formatDateLabel(date, period) {
-    
     const day = (date.getDate()).toString().padStart(2, '0');
     console.log('FECHA ACTUAL', day)
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     return `${day}/${month}`;
 }
-
-
 // En las funciones de actualización de gráficas, agregué borderRadius:
 function updateMovementChart(data) {
     const ctx = document.getElementById('movementChart').getContext('2d');
@@ -538,8 +479,6 @@ function updateBalanceChart(data) {
         }
     });
 }
-
-
 function getPeriodLabel() {
     switch (currentPeriod) {
         case 'day': return 'Días';
@@ -548,16 +487,7 @@ function getPeriodLabel() {
         default: return 'Período';
     }
 }
-
-// Exportar funciones necesarias
-//
-///
-///
-///
-//
-//
-///
-
+// Funciones de Bodega
 // Inicializar Select2 para búsqueda de productos del segundo inventario
 async function initSelect2_1() {
     const { data: productos } = await supabase
@@ -714,74 +644,61 @@ async function fetchMovementData1(productId, startDate, endDate) {
 
 // Procesar datos para el período (segundo inventario)
 function processDataForPeriod1(entradas, salidas, startDate, endDate, period) {
-    // ... (misma implementación que processDataForPeriod pero usando currentPeriod1)
-    // Solo asegúrate de cambiar cualquier referencia a variables globales por las versiones con sufijo 1
     const result = {
         labels: [],
         entradas: [],
         salidas: [],
         stock: []
     };
-        // Asegurarse de que las fechas son objetos Date válidos
-
-    // Nueva función para ajustar la fecha y evitar el desplazamiento
-function adjustDate(dateString) {
-    const date = new Date(dateString);
-    if (isNaN(date)) {
-        console.warn('No se pudo interpretar la fecha:', dateString);
-        return new Date(NaN);
-    }
-    return date; // ya viene completa, no necesita +5h extra
-}
-
-
-const groupData = (data, dateField, valueField) => {
-    const grouped = {};
-
-    data.forEach(item => {
-        const rawDate = item[dateField];
-        if (!rawDate) {
-            console.warn('Fecha inválida (vacía o null):', item);
-            return;
-        }
-
-        const date = adjustDate(rawDate);
+    function adjustDate(dateString) {
+        const date = new Date(dateString);
         if (isNaN(date)) {
-            console.warn('Fecha inválida (NaN):', rawDate);
-            return;
+            console.warn('No se pudo interpretar la fecha:', dateString);
+            return new Date(NaN);
         }
+        return date; // ya viene completa, no necesita +5h extra
+    }
+    const groupData = (data, dateField, valueField) => {
+        const grouped = {};
 
-        let key;
-        switch (period) {
-            case 'day':
-                key = date.toISOString().split('T')[0];
-                break;
-            case 'week':
-                const year = date.getFullYear();
-                const week = getWeekNumber(date)[1];
-                key = `${year}-W${week.toString().padStart(2, '0')}`;
-                break;
-            case 'month':
-                key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-                break;
-        }
+        data.forEach(item => {
+            const rawDate = item[dateField];
+            if (!rawDate) {
+                console.warn('Fecha inválida (vacía o null):', item);
+                return;
+            }
 
-        if (!grouped[key]) {
-            grouped[key] = 0;
-        }
-        grouped[key] += item[valueField];
-    });
+            const date = adjustDate(rawDate);
+            if (isNaN(date)) {
+                console.warn('Fecha inválida (NaN):', rawDate);
+                return;
+            }
 
-    return grouped;
-};
-    
-    // Resto de la función permanece igual...
-    // ...
-      
-    // Agrupar entradas y salidas
+            let key;
+            switch (period) {
+                case 'day':
+                    key = date.toISOString().split('T')[0];
+                    break;
+                case 'week':
+                    const year = date.getFullYear();
+                    const week = getWeekNumber(date)[1];
+                    key = `${year}-W${week.toString().padStart(2, '0')}`;
+                    break;
+                case 'month':
+                    key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                    break;
+            }
+
+            if (!grouped[key]) {
+                grouped[key] = 0;
+            }
+            grouped[key] += item[valueField];
+        });
+
+        return grouped;
+    };
     const groupedEntradas = groupData(entradas, 'fecha_entrada', 'und_entrada');
     const groupedSalidas = groupData(salidas, 'fecha_salida', 'und_salida');
-    
     // Obtener todas las claves únicas (períodos de tiempo)
     const allKeys = new Set([
         ...Object.keys(groupedEntradas),
@@ -824,11 +741,8 @@ const groupData = (data, dateField, valueField) => {
         currentStock += (groupedEntradas[key] || 0) - (groupedSalidas[key] || 0);
         result.stock.push(currentStock);
     });
-    
     return result;
-
 }
-
 // Actualizar gráfica de movimientos del segundo inventario
 function updateMovementChart1(data) {
     const ctx = document.getElementById('movementChart1').getContext('2d');  // ID con sufijo 1
@@ -1028,31 +942,3 @@ function getPeriodLabel1() {
         default: return 'Período';
     }
 }
-
-
-
-//
-///
-//
-//  Haccer pdfs
-//
-// 
-
-export function obtenerFiltrosActivos() {
-    const producto = document.querySelector('#productSelect')?.selectedOptions[0]?.textContent || 'No seleccionado';
-    const rango = document.querySelector('#timeRange')?.value || 'No seleccionado';
-    const periodo = document.querySelector('.time-period-btn.active')?.textContent || 'No seleccionado';
-  
-    const producto2 = document.querySelector('#productSelect1')?.selectedOptions[0]?.textContent || 'No seleccionado';
-    const rango2 = document.querySelector('#timeRange1')?.value || 'No seleccionado';
-    const periodo2 = document.querySelector('.time-period-btn1.active')?.textContent || 'No seleccionado';
-  
-    return {
-      filtrosFrios: { producto, rango, periodo },
-      filtrosNormal: { producto: producto2, rango: rango2, periodo: periodo2 }
-    };
-  }
-  
-
-
-export { updateCharts, updateCharts1 };

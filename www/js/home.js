@@ -41,7 +41,7 @@ async function checkAuthAndRole() {
         'btn-estadistica',
         'btn-despachoAdmin',
         'btn-controlDespacho',
-        //'btn-clientes',
+        'btn-clientes',
         //'btn-congelacion',
         //'btn-pedidosProduccion'
       ]);
@@ -65,11 +65,11 @@ async function checkAuthAndRole() {
       mostrar(['btn-inventario-frio']);
       break;
 
-    case 6: // frio
+    case 6: // Congelación
       mostrar(['btn-congelacion']);
       break; 
 
-    case 7: // frio
+    case 7: // Producción
       mostrar(['btn-pedidosProduccion']);
       break;          
     default:

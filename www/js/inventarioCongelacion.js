@@ -1,7 +1,6 @@
 import {obtenerProductos, agregarProducto, actualizarProducto, eliminarProducto, agregarEntrada, agregarSalida, supabase, obtenerStockProducto } from './app.js';
 
 let productosGlobal = []; // Declara variable para guardar datos de los productos
-const codigoCorrecto = "1234"; // Declara variable para guardar codigo correcto para derechos de admin
 
 $(document).ready(async function () {
     let rolUsuario;
