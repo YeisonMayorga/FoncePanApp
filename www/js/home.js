@@ -42,7 +42,7 @@ async function checkAuthAndRole() {
         'btn-despachoAdmin',
         'btn-controlDespacho',
         'btn-clientes',
-        //'btn-congelacion',
+        'btn-congelacion',
         //'btn-pedidosProduccion'
       ]);
       break;
@@ -50,6 +50,7 @@ async function checkAuthAndRole() {
     case 2: // sucursal
       mostrar([
         'btn-despachoSucursal',
+        'btn-clientes'
         //'btn-pedidosSucursal'
       ]);
       break;

@@ -1,8 +1,36 @@
+import { eliminarDespacho } from '../backend/endpoints/despachoBackend.js';
 import { obtenerDespachosAdmin, obtenerDetalleDespacho, actualizarEstadoDespacho, supabase, obtenerEstadoDespacho } from './app.js';
 let idDespachoSeleccionado = null;
 let estadoDespachoActual = null;
 let devoluciones = [];
 $(document).ready(async () => {
+    let rolUsuario;
+    checkAuthAndRole();
+    const idRol = await checkAuthAndRole();
+    if (!idRol) return; // Si no hay rol, ya se redirigió
+    rolUsuario = idRol;
+    async function checkAuthAndRole() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        window.location.href = 'login.html';
+        return null;
+    }
+    const userId = session.user.id;
+    console.log('ID del usuario logeado:', userId);
+    const { data: user, error } = await supabase
+        .schema('inventario')
+        .from('usuarios')
+        .select('id_rol')
+        .eq('id', userId)
+        .single();
+    if (error || !user) {
+        console.error('Error al obtener usuario o no existe');
+        window.location.href = 'login.html';
+        return null;
+    }
+    return user.id_rol;  // ✅ Retorna el id_rol directamente
+    }
+    const mostrarAcciones = rolUsuario === 1 || rolUsuario === 4;    
     await cargarDevoluciones();
     // Cargar todas las devoluciones al inicializar la página
     async function cargarDevoluciones() {
@@ -126,10 +154,14 @@ $(document).ready(async () => {
                     const botonDevolver = existeDevolucion 
                     ? `<button class="btn btn-warning btn-sm btn-devolver" data-id="${row.id_despacho}">Ver Devolución</button>` 
                     : '';
-                    
+                    // 👇 Solo roles 1 o 4 pueden ver este botón
+                    const botonEliminar = mostrarAcciones 
+                        ? `<button class="btn btn-danger btn-sm btnEliminarDespacho" data-id="${row.id_despacho}">Eliminar</button>` 
+                        : '';                    
                     return `
                     <button class="btn btn-primary btn-sm ver-detalle" data-id="${row.id_despacho}" data-estado="${row.estado}">Ver</button>
                     ${botonDevolver}
+                    ${botonEliminar}
                     `;
                 }
             }
@@ -346,6 +378,20 @@ $(document).ready(async () => {
             $('#modalDetalle').modal('hide');
             $('#tablaDespachosAdmin').DataTable().ajax.reload();
     });
+
+    $('#tablaDespachosAdmin tbody').on('click', '.btnEliminarDespacho', function () {
+    const id = $(this).data('id');
+    console.log("Eliminar despacho con ID:", id);
+
+    $('#modalConfirmarEliminar').modal('show');
+
+    $('#btnConfirmarEliminar').off('click').on('click', async function () {
+        await eliminarDespacho(id);
+        $('#modalConfirmarEliminar').modal('hide');
+        tabla.ajax.reload();
+    });
+    });
+
 });
 import { obtenerNotificaciones, marcarNotificacionVista } from './app.js';
 supabase

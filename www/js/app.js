@@ -239,7 +239,7 @@ export async function eliminarSalida(id_salida) {
 export async function obtenerStockProducto(idProducto) {
     try {
         const { data, error } = await supabase
-                .schema('inventario')
+            .schema('inventario')
             .from('productos')
             .select('und_producto')
             .eq('id_producto', idProducto)
