@@ -2,7 +2,8 @@ import {actualizarEntradan, actualizarSalidan, agregarEntradan, agregarSalidan, 
 let entradasGlobal = []; 
 let salidasGlobal = [];
 $(document).ready(async function () {
-
+    // Evita que se muestre la página antes de tiempo
+    document.body.classList.remove('loaded');
     let tableEntradas;
     let tableSalidas;
     let rolUsuario;
@@ -48,6 +49,7 @@ $(document).ready(async function () {
     });
 
     function inicializarTablas(mostrarAcciones) {
+        
         // --- Tabla Entradas ---
         const columnasEntradas = [
             { 
@@ -85,7 +87,17 @@ $(document).ready(async function () {
             `
             });
         }
+        
         tableEntradas = $('#tablaEntradas').DataTable({
+            ajax: async function (data, callback) {
+                entradasGlobal = await obtenerEntradasn();
+                console.log(entradasGlobal);
+                callback({ data: entradasGlobal });
+                // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                }, 300);                
+            },            
             autoWidth: false,
             responsive: true,
             "language": {
@@ -103,13 +115,9 @@ $(document).ready(async function () {
                 }
             },
             order: [[0, 'desc']],
-            ajax: async function (data, callback) {
-                entradasGlobal = await obtenerEntradasn();
-                console.log(entradasGlobal);
-                callback({ data: entradasGlobal });
-            },
             columns: columnasEntradas
         });
+        
         // --- Tabla Salidas ---
         const columnasSalidas = [
             { 
@@ -170,6 +178,7 @@ $(document).ready(async function () {
                 console.log(salidasGlobal);
                 console.log('Tamaño de salida',salidasGlobal.length);
                 callback({ data: salidasGlobal });
+               
             },
             columns: columnasSalidas
         });

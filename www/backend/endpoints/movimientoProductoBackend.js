@@ -27,15 +27,16 @@ export async function obtenerMovimiento(tipoMovimiento, tipoProducto) {
         .from('movimiento_producto')
         .select(`
             *,
-            producto:producto (
+            producto:producto!inner (
                 id_producto,
                 nombre_producto,
                 tipo
             )
         `)
-        .eq('tipo', tipoMovimiento)      // movimiento_producto.tipo = 'entrada' | 'salida'
-        .eq('producto.tipo', tipoProducto) // producto.tipo = 'cuartofrio' | 'bodega' | ...
-        .order('fecha_movimiento', { ascending: true });
+        .eq('tipo', tipoMovimiento)      
+        .eq('producto.tipo', tipoProducto)
+        .order('fecha_movimiento', { ascending: false })
+        .limit(500);
 
     if (error) {
         console.error('Error al obtener movimientos:', error);

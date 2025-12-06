@@ -13,9 +13,8 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/casa.css">
-        <title>Inventario Frio</title>
+        <title>Inventario Producto No Controlado</title>
     </head>
-
     <body>
         <!-- Loader global -->
         <div id="loader" class="loader-overlay">
@@ -23,17 +22,17 @@
                 <div class="spinner"></div>
                 <p>Cargando...</p>
             </div>
-        </div>    
-                
+        </div>        
+        
         <a href="home.html" class="home-button">
             <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
         </a>
         <div class="container mt-5">
 
-            <h2 class="text-center">Inventario Frio</h2>
+            <h2 class="text-center">Inventario Producto No Controlado</h2>
             <button id="btnAgregar" class="btn btn-success mb-3">Agregar Nuevo</button>
             <button id="btnAgregarEntradaSalida" class="btn btn-primary mb-3">Agregar Entrada/Salida</button>
-            <button id="btnEntradaSalida" class="btn btn-secondary mb-3" onclick="window.location.href='entradaSalidaFrio.html'">Ver Entrada/Salida</button>
+            <button id="btnEntradaSalida" class="btn btn-secondary mb-3" onclick="window.location.href='entradaSalidaNoControlado.html'">Ver Entrada/Salida</button>
     
             <table id="tablaProductos" class="table table-striped">
                 <thead>
@@ -131,6 +130,6 @@
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
-        <script type="module" src="js/inventarioFrio.js"></script>
+        <script type="module" src="js/inventarioNoControlado.js"></script>
     </body>
 </html>

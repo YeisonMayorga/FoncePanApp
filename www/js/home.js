@@ -29,7 +29,9 @@ async function checkAuthAndRole() {
 
   // ✅ Oculta el loader y muestra el contenedor principal
   document.getElementById('loading').style.display = 'none';
-  document.getElementById('contenedor-botones').style.display = 'flex';
+  document.getElementById('app-content').style.display = 'block';
+  document.getElementById('logout-btn').style.display = 'block';
+
   console.log('Rol del usuario',user.id_rol)
   // 🎯 Mostrar según el rol
   switch (user.id_rol) {
@@ -43,6 +45,7 @@ async function checkAuthAndRole() {
         'btn-controlDespacho',
         'btn-clientes',
         'btn-congelacion',
+        'btn-inventario-No-Controlado',
         //'btn-pedidosProduccion'
       ]);
       break;
@@ -81,7 +84,7 @@ async function checkAuthAndRole() {
 function mostrar(ids) {
   ids.forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = 'inline-block';
+    if (el) el.style.display = 'flex'; // <-- IMPORTANTE
   });
 }
 

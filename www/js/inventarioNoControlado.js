@@ -3,7 +3,7 @@ import {agregarProducto, obtenerProductosActivos, actualizarProducto, eliminarPr
 import {supabase} from '../backend/supabase/supabaseCliente.js';
 
 let productosGlobal = []; // Declara variable para guardar datos de los productos
-const tipoProducto = 'congelacion' // 
+const tipoProducto = 'nocontrolado' // 
 $(document).ready(async function () {
     // Evita que se muestre la página antes de tiempo
     document.body.classList.remove('loaded');
@@ -95,7 +95,7 @@ $(document).ready(async function () {
             // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
             setTimeout(() => {
                 document.body.classList.add('loaded');
-            }, 300);             
+            }, 300); 
         },
 
         columns: columnasTabla

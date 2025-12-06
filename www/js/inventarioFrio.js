@@ -3,6 +3,8 @@ import {obtenerProductos, agregarProducto, actualizarProducto, eliminarProducto,
 let productosGlobal = []; // Declara variable para guardar datos de los productos
 
 $(document).ready(async function () {
+    // Evita que se muestre la página antes de tiempo
+    document.body.classList.remove('loaded');
 
     let rolUsuario;
     checkAuthAndRole();
@@ -88,6 +90,10 @@ $(document).ready(async function () {
         ajax: async function (data, callback) {
             productosGlobal = await obtenerProductos();
             callback({ data: productosGlobal });
+            // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);             
         },
 
         columns: columnasTabla

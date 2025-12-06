@@ -39,3 +39,47 @@ body {
         font-size: 14px;
     }
 }
+/* LOADER GLOBAL */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999; /* siempre encima */
+}
+
+.loader-content p {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    font-family: Poppins, sans-serif;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #e0e0e0;
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Ocultar contenido hasta que el JS lo muestre */
+body.loaded #loader {
+    display: none;
+}
+body:not(.loaded) .container,
+body:not(.loaded) .home-button {
+    display: none !important;
+}

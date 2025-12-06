@@ -3,6 +3,8 @@ import {supabase} from '../backend/supabase/supabaseCliente.js';
 
 let clientesGlobal = []; // Declara variable para guardar datos de los Clientes
 $(document).ready(async function () {
+    // Evita que se muestre la página antes de tiempo
+    document.body.classList.remove('loaded');
 
     let rolUsuario;
     checkAuthAndRole();
@@ -84,6 +86,10 @@ $(document).ready(async function () {
         ajax: async function (data, callback) {
             clientesGlobal = await obtenerClientes();
             callback({ data: clientesGlobal });
+            // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);             
         },
 
         columns: columnasTabla

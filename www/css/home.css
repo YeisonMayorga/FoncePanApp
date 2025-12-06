@@ -1,72 +1,88 @@
-/* Imagen */
+/* ------------------------- */
+/*    CUERPO DE LA PAGINA    */ 
+/* ------------------------- */
+body { 
+    font-family: Roboto, sans-serif;
+}
+
+/* ------------------------- */
+/*       IMAGEN SUPERIOR     */
+/* ------------------------- */
 #img1 {
-    width: 340px;
+    width: 100%;
+    max-width: 280px;
     height: auto;
-    margin: 17px 30px;
-}
-.imgdiv {
-    width: 400px;
-    height: 200px;
     display: block;
-    margin: 10% auto;
+    margin: 0 auto;
+}
+
+.imgdiv {
+    width: 100%;
+    max-width: 350px;
+    margin: 40px auto 10px auto;
     background-color: white;
-    border-radius: 15%;
-
-}
-/* Cuerpo de la página */
-body {
-    background: #ffffff;
-    font-family: times;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* Contenedor de botones */
+/* ------------------------- */
+/*   CONTENEDOR DE BOTONES   */
+/* ------------------------- */
 .contenedor-botones {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-    flex-direction: row;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 20px;
+    width: 95%;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding-bottom: 40px;
 }
 
-/* Diseño responsive */
-@media (max-width: 768px) {
-    .contenedor-botones {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-#logout-btn {
-    position:fixed;
-}
-/* Botones */
+/* ------------------------- */
+/*         BOTONES           */
+/* ------------------------- */
 .btn-modulo {
-    
     cursor: pointer;
-    padding: 20px;
-    background: #71ff84;
-    font-size: 24px;
-    border-radius: 10px 0 0 10px;
-    transition: all 0.3s ease;
-    position: relative;
+    background: linear-gradient(135deg, #4aff65, #4a5aff, #b14aff);
+    background-size: 200% 200%;
+    animation: bgMove 6s ease infinite;
+
+    font-size: 18px;
+    border-radius: 18px;
+    padding: 20px 10px;
+
     display: none;
-    flex-direction: column; /* Para poner imagen arriba del texto */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 170px; /* Tamaño fijo */
-    height: 160px;
+
+    min-height: 170px;
     text-align: center;
-}
-#loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 70vh;
-  color: #333;
-  font-weight: 500;
+
+    color: black;
+    font-weight: bold;
+
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+    transition: transform .3s ease;
+    position: relative;
 }
 
-/* Efectos de los bordes */
+/* Movimiento suave en el fondo */
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Hover efecto original + mejora */
+.btn-modulo:hover {
+    transform: scale(1.05);
+    border-radius: 0;
+}
+
+/* Bordes animados que tenías */
 .btn-modulo::before,
 .btn-modulo::after {
     content: "";
@@ -91,38 +107,74 @@ body {
     border-right: 3px solid black;
 }
 
-.btn-modulo:hover {
-    border-radius: 0;
-}
-
 .btn-modulo:hover::before,
 .btn-modulo:hover::after {
     width: 100%;
     height: 100%;
 }
 
-/* Estilo del icono dentro del botón */
+/* ------------------------- */
+/*    ICONO DENTRO BOTÓN     */
+/* ------------------------- */
 .icono-btn {
-    width: 90%;
-    height: 80%;
-    background-color: white;
-    border-radius: 20%; /* Hace que la imagen esté dentro de un círculo */
+    width: 85px;
+    height: 85px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    margin-bottom: 5px; /* Espacio entre imagen y texto */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    margin-bottom: 8px;
 }
 
-/* Ajuste de la imagen dentro del círculo */
 .icono-btn img {
     width: 70%;
     height: auto;
 }
 
-/* Texto dentro del botón */
+/* ------------------------- */
+/*   TEXTO DEL BOTÓN         */
+/* ------------------------- */
 .texto-btn {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     color: black;
+}
+
+/* ------------------------- */
+/*        LOADER             */
+/* ------------------------- */
+#loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  color: #333;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+/* ------------------------- */
+/*  BOTÓN CERRAR SESIÓN      */
+/* ------------------------- */
+#logout-btn {
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    z-index: 9000;
+}
+
+/* ------------------------- */
+/* BREAKPOINTS EXTRA         */
+/* ------------------------- */
+@media (max-width: 480px) {
+    .btn-modulo {
+        min-height: 150px;
+        font-size: 15px;
+    }
+    .icono-btn {
+        width: 70px;
+        height: 70px;
+    }
 }

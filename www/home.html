@@ -5,104 +5,117 @@
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <link rel="shortcut icon" href="./img/LOGO.png" type="image/x-icon"> 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+
         <link rel="stylesheet" href="css/home.css">
         <title>Menú</title>
     </head>
     <body>
-        <!-- 🔒 Botón de cerrar sesión -->
-        <div class="d-flex justify-content-end p-3">
-            <button id="logout-btn" class="btn btn-danger">
-                <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-            </button>
-        </div>
 
-        <!-- 🔄 Loader de carga -->
-        <div id="loading" class="text-center mt-5">
+        <!-- Botón cerrar sesión (oculto hasta cargar) -->
+        <button id="logout-btn" class="btn btn-danger" style="display:none;">
+            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+        </button>
+
+        <!-- Loader -->
+        <div id="loading">
             <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;"></div>
             <p class="mt-3">Verificando usuario...</p>
         </div>
-        
-        <div class="imgdiv">   
-            <img src="img/download.webp" id="img1" />
+
+        <!-- Contenido que se mostrará después -->
+        <div id="app-content" style="display:none;">
+
+            <div class="imgdiv">   
+                <img src="img/download.webp" id="img1" />
+            </div>
+
+            <!-- Contenedor de botones -->
+            <div id="contenedor-botones" class="contenedor-botones">
+                <!-- Admin / Frío / etc -->
+                <span id="btn-inventario-frio" class="btn-modulo" onclick="window.location.href='inventarioFrio.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-refrigeración-100.png">
+                    </div>
+                    <span class="texto-btn">Cuarto Frío</span>
+                </span>
+
+                <span id="btn-despachoAdmin" class="btn-modulo" onclick="window.location.href='despachoadmin.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-departamento-100.png">
+                    </div>
+                    <span class="texto-btn">Despacho Administrador</span>
+                </span>
+
+                <span id="btn-inventario" class="btn-modulo" onclick="window.location.href='inventario.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-inventario-100.png">
+                    </div>
+                    <span class="texto-btn">Bodega</span>
+                </span>
+
+                <span id="btn-despachoSucursal" class="btn-modulo" onclick="window.location.href='despachosucursal.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-departamento-100.png">
+                    </div>
+                    <span class="texto-btn">Despacho Sucursal</span>
+                </span>
+
+                <span id="btn-estadistica" class="btn-modulo" onclick="window.location.href='estadistica.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-gráfico-combinado-100.png">
+                    </div>
+                    <span class="texto-btn">Estadísticas</span>
+                </span>
+
+                <span id="btn-clientes" class="btn-modulo" onclick="window.location.href='cliente.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-cliente-80.png">
+                    </div>
+                    <span class="texto-btn">Clientes</span>
+                </span>
+
+                <span id="btn-congelacion" class="btn-modulo" onclick="window.location.href='inventarioCongelacion.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-congelación-96.png">
+                    </div>
+                    <span class="texto-btn">Congelación</span>
+                </span>
+
+                <span id="btn-inventario-No-Controlado" class="btn-modulo" onclick="window.location.href='inventarioNoControlado.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-panadería-100.png">
+                    </div>
+                    <span class="texto-btn">Productos Sin Control</span>
+                </span>
+
+                <span id="btn-pedidosSucursal" class="btn-modulo" onclick="window.location.href='pedidosucursal.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-pedido-en-línea-100.png">
+                    </div>
+                    <span class="texto-btn">Pedidos Sucursal</span>
+                </span>
+
+                <span id="btn-pedidosProduccion" class="btn-modulo" onclick="window.location.href='pedidoproducion.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-pedido-en-línea-100.png">
+                    </div>
+                    <span class="texto-btn">Pedidos Producción</span>
+                </span>
+
+                <span id="btn-controlDespacho" class="btn-modulo" onclick="window.location.href='controlProducto.html'">
+                    <div class="icono-btn">
+                        <img src="img/icons8-marca-de-verificación-de-instagram-100.png">
+                    </div>
+                    <span class="texto-btn">Control Productos</span>
+                </span>
+
+            </div>
+
         </div>
 
-        <!-- 📦 Contenedor de botones (oculto inicialmente) -->
-        <div id="contenedor-botones" class="contenedor-botones" style="display:none;">
-
-            <span id="btn-inventario-frio" class="btn-modulo" onclick="window.location.href='inventarioFrio.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-refrigeración-100.png" alt="Inventario">
-                </div>
-                <span class="texto-btn">Inventario Frío</span>
-            </span>
-
-            <span id="btn-despachoAdmin" class="btn-modulo" onclick="window.location.href='despachoadmin.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-departamento-100.png" alt="Despachos Administrador">
-                </div>
-                <span class="texto-btn">Despacho A</span>
-            </span>
-
-            <span id="btn-inventario" class="btn-modulo" onclick="window.location.href='inventario.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-inventario-100.png" alt="Inventario Bodega">
-                </div>
-                <span class="texto-btn">Inventario</span>
-            </span>
-
-            <span id="btn-despachoSucursal" class="btn-modulo" onclick="window.location.href='despachosucursal.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-departamento-100.png" alt="Despachos Sucursal">
-                </div>
-                <span class="texto-btn">Despacho S</span>
-            </span>
-
-            <span id="btn-estadistica" class="btn-modulo" onclick="window.location.href='estadistica.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-gráfico-combinado-100.png" alt="Estadisticas">
-                </div>
-                <span class="texto-btn">Estadísticas</span>
-            </span>
-
-            <span id="btn-clientes" class="btn-modulo" onclick="window.location.href='cliente.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-cliente-80.png" alt="Clientes">
-                </div>
-                <span class="texto-btn">Clientes</span>
-            </span>
-
-            <span id="btn-congelacion" class="btn-modulo" onclick="window.location.href='inventarioCongelacion.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-congelación-96.png" alt="Inventario Congelación">
-                </div>
-                <span class="texto-btn">Congelación</span>
-            </span>
-
-            <span id="btn-pedidosSucursal" class="btn-modulo" onclick="window.location.href='pedidosucursal.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-pedido-en-línea-100.png" alt="Pedido Sucursal">
-                </div>
-                <span class="texto-btn">Pedidos S</span>
-            </span>
-
-            <span id="btn-pedidosProduccion" class="btn-modulo" onclick="window.location.href='pedidoproducion.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-pedido-en-línea-100.png" alt="Pedido Producción">
-                </div>
-                <span class="texto-btn">Pedidos P</span>
-            </span>   
-
-            <span id="btn-controlDespacho" class="btn-modulo" onclick="window.location.href='controlProducto.html'">
-                <div class="icono-btn">
-                    <img src="img/icons8-marca-de-verificación-de-instagram-100.png" alt="Control">
-                </div>
-                <span class="texto-btn">Control</span>
-            </span>
-
-        </div>
-
-        <!-- JS -->
         <script src="cordova.js"></script>
         <script type="module" src="js/home.js"></script>
+
     </body>
 </html>

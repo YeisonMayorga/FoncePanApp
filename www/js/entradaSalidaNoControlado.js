@@ -6,11 +6,11 @@ let entradasGlobal = [];
 let salidasGlobal = [];
 const tipoSalida = 'salida';
 const tipoEntrada = 'entrada';
-const tipoProducto = 'congelacion';
+const tipoProducto = 'nocontrolado';
 
 $(document).ready(async function () {
     // Evita que se muestre la página antes de tiempo
-    document.body.classList.remove('loaded');
+    document.body.classList.remove('loaded');    
     let tableEntradas;
     let tableSalidas;
     let rolUsuario;
@@ -103,12 +103,11 @@ $(document).ready(async function () {
         tableEntradas =  $('#tablaEntradas').DataTable({
             ajax: async (data, callback) => {                
                 entradasGlobal = await obtenerMovimiento(tipoEntrada, tipoProducto);
-                console.log('Los movimientos: ', entradasGlobal)
                 callback({ data: entradasGlobal });
                 // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
                 setTimeout(() => {
                     document.body.classList.add('loaded');
-                }, 300);                  
+                }, 300);                 
             },
             autoWidth: false,
             responsive: true,

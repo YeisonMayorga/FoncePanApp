@@ -4,6 +4,8 @@ let entradasGlobal = [];
 let salidasGlobal = [];
 
 $(document).ready(async function () {
+    // Evita que se muestre la página antes de tiempo
+    document.body.classList.remove('loaded');
     let tableEntradas;
     let tableSalidas;
     let rolUsuario;
@@ -97,6 +99,10 @@ $(document).ready(async function () {
             ajax: async (data, callback) => {
                 entradasGlobal = await obtenerEntradas();
                 callback({ data: entradasGlobal });
+                // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                }, 300);                 
             },
             autoWidth: false,
             responsive: true,

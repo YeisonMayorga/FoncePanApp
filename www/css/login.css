@@ -1,7 +1,7 @@
 
 body {
   background: linear-gradient(135deg, #e3f2fd, #ffffff);
-  font-family: times;
+  font-family: Roboto, sans-serif;
 }
 
 .card {

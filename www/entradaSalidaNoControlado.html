@@ -11,11 +11,10 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">            
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/styles.css">        
         <link rel="stylesheet" href="css/casa.css">
-        <title>Inventario Frio</title>
+        <title>Movimientos No Controlado</title>
     </head>
-
     <body>
         <!-- Loader global -->
         <div id="loader" class="loader-overlay">
@@ -23,23 +22,23 @@
                 <div class="spinner"></div>
                 <p>Cargando...</p>
             </div>
-        </div>    
+        </div>  
                 
         <a href="home.html" class="home-button">
             <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
         </a>
-        <div class="container mt-5">
 
-            <h2 class="text-center">Inventario Frio</h2>
-            <button id="btnAgregar" class="btn btn-success mb-3">Agregar Nuevo</button>
-            <button id="btnAgregarEntradaSalida" class="btn btn-primary mb-3">Agregar Entrada/Salida</button>
-            <button id="btnEntradaSalida" class="btn btn-secondary mb-3" onclick="window.location.href='entradaSalidaFrio.html'">Ver Entrada/Salida</button>
-    
-            <table id="tablaProductos" class="table table-striped">
+        <a href="inventarioNoControlado.html" class="back-button">
+            <i class="fa fa-reply"></i> <!-- Icono de Font Awesome -->
+        </a>
+
+        <div class="container mt-5">
+            <h2 class="text-center">Entradas</h2>
+            <button id="btnAgregarEntradaSalida" class="btn btn-success mb-3">Agregar Entrada</button>
+            <table id="tablaEntradas" class="table table-striped">
                 <thead>
                     <tr>
 
-                        
                     </tr>
                 </thead>
                 <tbody>
@@ -47,7 +46,22 @@
                 </tbody>
             </table>
         </div>
-        
+
+        <div class="container mt-5">
+            <h2 class="text-center">Salidas</h2>
+            <button id="btnAgregarSalidaEntrada" class="btn btn-success mb-3">Agregar Salida</button>
+            <table id="tablaSalidas" class="table table-striped">
+                <thead>
+                    <tr>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se cargarán los datos dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
         <!-- Modal para Agregar/Editar Producto -->
         <div class="modal fade" id="modalFormulario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -65,7 +79,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="und_producto" class="form-label">Unidades:</label>
-                                <input type="number" class="form-control" id="und_producto" value="0" min="0" required>
+                                <input type="number" class="form-control" id="und_producto" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </form>
@@ -73,7 +87,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal para Agregar Entrada/Salida -->
         <div class="modal fade" id="modalEntradaSalida" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -86,27 +100,56 @@
                         <form id="formEntradaSalida">
                             <div class="mb-3">
                                 <label for="productoSelect" class="form-label">Producto:</label>
-                                <select  class="form-control" id="productoSelect" required>
+                                <select class="form-control" id="productoSelect" required>
                                     <option value="">Selecciona un producto</option>
-                                    <!-- Se llenará dinámicamente  -->
+                                    <!-- Se llenará dinámicamente -->
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="cantidad" class="form-label">Cantidad:</label>
-                                <input type="number" class="form-control" id="cantidad" value="0" min="1"  required>
+                                <input type="number" class="form-control" id="cantidad" value="0" min="0"  required>
                             </div>
 
-                            <div id="mensajeErrorDatos" class="text-danger mt-2" style="display: none;">
-                                ⚠️ Datos incorrectos. Inténtalo de nuevo.
-                            </div>
-                            <button type="submit" class="btn btn-success" id="btnAgregarEntrada">Agregar Entrada</button>
-                            <button type="submit" class="btn btn-danger" id="btnAgregarSalida">Agregar Salida</button>
+                            <button type="submit" class="btn btn-primary" id="btnAgregarEntrada">Guardar</button>
+                            
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        
+
+        <!-- Modal para Agregar Salida/Entrada -->
+        <div class="modal fade" id="modalSalidaEntrada" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEntradaSalidaLabel">Agregar Entrada o Salida</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formSalidaEntrada">
+                            <div class="mb-3">
+                                <label for="productoSelect" class="form-label">Producto:</label>
+                                <select class="form-control" id="productoSelect1" required>
+                                    <option value="">Selecciona un producto</option>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad:</label>
+                                <input type="number" class="form-control" id="cantidad1" value="0" min="0"  required>
+                            </div>
+                            <div id="mensajeErrorDatos" class="text-danger mt-2" style="display: none;">
+                                ⚠️ Datos incorrectos. Inténtalo de nuevo.
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btnAgregarSalida">Guardar</button>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
         <!-- Modal de Confirmación para Eliminar -->
         <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -125,12 +168,13 @@
                 </div>
             </div>
         </div>
+
         <script src="cordova.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
-        <script type="module" src="js/inventarioFrio.js"></script>
+        <script type="module" src="js/entradaSalidaNoControlado.js"></script>
     </body>
 </html>
