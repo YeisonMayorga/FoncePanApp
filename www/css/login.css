@@ -1,21 +1,77 @@
-
 body {
   background: linear-gradient(135deg, #e3f2fd, #ffffff);
   font-family: Roboto, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(13, 110, 253, 0.1) 0%, transparent 70%);
+  animation: pulse 15s ease-in-out infinite;
+  top: -50%;
+  left: -50%;
+  z-index: 0;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
 }
 
 .card {
   border-radius: 20px;
   animation: fadeIn 0.6s ease-in-out;
+  position: relative;
+  z-index: 1;
+  border: none;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
 }
 
-img {
+.login-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.logo-animation {
   object-fit: cover;
+  animation: logoFloat 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
 }
 
-input:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+.logo-animation:hover {
+  transform: scale(1.05);
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.fade-in-delay {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.fade-in-delay-2 {
+  animation: fadeIn 1s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -29,4 +85,224 @@ input:focus {
   }
 }
 
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  transition: all 0.3s ease;
+}
 
+.input-group:focus-within .input-group-text {
+  background-color: #e7f1ff;
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+input:focus, select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  transition: all 0.3s ease;
+}
+
+.form-control, .form-select {
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  transform: scale(1.02);
+}
+
+.btn-toggle-password {
+  cursor: pointer;
+  border: none;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.btn-toggle-password:hover {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+}
+
+.btn-login {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  padding: 12px;
+}
+
+.btn-login::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-login:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.btn-login.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.validation-icon {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.validation-icon.valid {
+  color: #198754;
+}
+
+.validation-icon.invalid {
+  color: #dc3545;
+}
+
+.validation-message {
+  display: block;
+  min-height: 20px;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.validation-message.valid {
+  color: #198754;
+}
+
+.validation-message.invalid {
+  color: #dc3545;
+  animation: shake 0.5s ease-in-out;
+}
+
+.error-message {
+  min-height: 50px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.error-message.show {
+  opacity: 1;
+  transform: translateY(0);
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c2c7;
+  animation: shake 0.5s ease-in-out, slideIn 0.3s ease-out;
+}
+
+.error-message.success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  animation: checkmark 0.3s ease-in-out;
+}
+
+@keyframes checkmark {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.version-text {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 10px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.version-text:hover {
+  opacity: 1;
+}
+
+/* Animación para el spinner de carga */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Efecto de pulso en los inputs cuando hay error */
+.form-control.error, .form-select.error {
+  border-color: #dc3545;
+  animation: inputError 0.5s ease-in-out;
+}
+
+@keyframes inputError {
+  0%, 100% { border-color: #dc3545; }
+  50% { border-color: #ff6b6b; }
+}
+
+/* Transición suave para el select de usuarios */
+.form-select {
+  cursor: pointer;
+}
+
+.form-select option {
+  padding: 10px;
+}
+
+/* Mejoras para dispositivos móviles */
+@media (max-width: 576px) {
+  .card {
+    margin: 20px;
+    max-width: 100%;
+  }
+  
+  .logo-animation {
+    height: 80px;
+  }
+}
