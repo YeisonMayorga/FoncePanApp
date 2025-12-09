@@ -26,16 +26,16 @@ body {
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-
 /* ------------------------- */
 /*   CONTENEDOR DE BOTONES   */
 /* ------------------------- */
 .contenedor-botones {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
+    justify-content: center; /* Centra los ítems */
     gap: 20px;
     width: 95%;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 20px auto;
     padding-bottom: 40px;
 }
@@ -45,7 +45,47 @@ body {
 /* ------------------------- */
 .btn-modulo {
     cursor: pointer;
-    background: linear-gradient(135deg, #4aff65, #4a5aff, #b14aff);
+    background: linear-gradient(135deg, #4aff65, #5effcc, #68ff3a);
+    background-size: 200% 200%;
+    animation: bgMove 6s ease infinite;
+
+    font-size: 18px;
+    border-radius: 18px;
+    padding: 20px 10px;
+
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 170px;
+    text-align: center;
+
+    /* 🔥 Limita el ancho */
+    max-width: 200px;
+    width: 100%;
+
+    color: black;
+    font-weight: bold;
+
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+    transition: transform .3s ease;
+    position: relative;
+}
+/*Cambia el tamaño del ancho de los botones dependiendo de cuantos botones se muestren*/
+/*
+.contenedor-botones {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 20px;
+    width: 95%;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding-bottom: 40px;
+}
+.btn-modulo {
+    cursor: pointer;
+    background: linear-gradient(135deg, #4aff65, #5effcc, #68ff3a);
     background-size: 200% 200%;
     animation: bgMove 6s ease infinite;
 
@@ -68,6 +108,8 @@ body {
     transition: transform .3s ease;
     position: relative;
 }
+*/
+
 
 /* Movimiento suave en el fondo */
 @keyframes bgMove {

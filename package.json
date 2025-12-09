@@ -1,7 +1,7 @@
 {
   "name": "foncepan",
   "displayName": "FoncePan",
-  "version": "2.0.4",
+  "version": "2.8.2",
   "description": "Gestión FoncePan",
   "main": "main.js",
   "scripts": {
@@ -51,7 +51,7 @@
     }
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.48.1",
+    "@supabase/supabase-js": "^2.87.1",
     "electron-updater": "^6.6.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1"

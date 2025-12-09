@@ -43,9 +43,9 @@ async function checkAuthAndRole() {
         'btn-estadistica',
         'btn-despachoAdmin',
         'btn-controlDespacho',
-        'btn-clientes',
-        'btn-congelacion',
-        'btn-inventario-No-Controlado',
+        //'btn-clientes',
+        //'btn-congelacion',
+        //'btn-inventario-No-Controlado',
         //'btn-pedidosProduccion'
       ]);
       break;
@@ -87,6 +87,44 @@ function mostrar(ids) {
     if (el) el.style.display = 'flex'; // <-- IMPORTANTE
   });
 }
+function mostrarSoloHabilitados(idsHabilitados) {
+
+  // 1️⃣ Lista de todos los botones que existen
+  const todos = [
+    'btn-inventario-frio',
+    'btn-inventario',
+    'btn-estadistica',
+    'btn-despachoAdmin',
+    'btn-controlDespacho',
+    'btn-despachoSucursal',
+    'btn-clientes',
+    'btn-congelacion',
+    'btn-inventario-No-Controlado',
+    'btn-pedidosProduccion'
+  ];
+
+  // 2️⃣ Mostrar todos los botones
+  todos.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = "flex";
+
+      // 3️⃣ Deshabilitar TODOS por defecto
+      el.style.pointerEvents = "none";
+      el.style.opacity = "1";  // visual más claro de deshabilitado
+    }
+  });
+
+  // 4️⃣ Habilitar SOLO los permitidos
+  idsHabilitados.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.pointerEvents = "auto";
+      el.style.opacity = "1";   
+    }
+  });
+}
+
 
 // 🚪 Cerrar sesión
 document.getElementById('logout-btn').addEventListener('click', async () => {

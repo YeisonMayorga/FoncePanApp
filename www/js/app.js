@@ -1,3 +1,5 @@
+//import { createClient } from '@supabase/supabase-js';
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const supabaseUrl = 'https://gcfyookdsujabsfektuo.supabase.co'
@@ -269,7 +271,8 @@ export async function obtenerEntradasn() {
     .schema('inventario')    
     .from('vista_entradasn') // Reemplaza con tu tabla o vista real
     .select('*')
-    .order('id_entrada', { ascending: true });
+    .order('fecha_entrada', { ascending: false })
+    .limit(500);
     if (error) {
         console.error('Error al obtener entradas:', error);
         return { success: false, error };
@@ -282,8 +285,8 @@ export async function obtenerSalidasn() {
     .schema('inventario')    
     .from('vista_salidasn') // Reemplaza con tu tabla o vista real
     .select('*', { head: false })
-    .order('id_salida', { ascending: true })
-    .range(0, 9999); // Devuelve hasta 10,000 filas
+    .order('fecha_salida', { ascending: false })
+    .limit(500); // Devuelve hasta 10,000 filas
     if (error) {
         console.error('Error al obtener salidas:', error);
         return { success: false, error };
