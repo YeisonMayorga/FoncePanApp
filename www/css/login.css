@@ -295,14 +295,194 @@ input:focus, select:focus {
   padding: 10px;
 }
 
-/* Mejoras para dispositivos móviles */
+/* Indicador de Estado de Conexión */
+.connection-status {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connection-status.connected {
+  background-color: #d1e7dd;
+  border: 1px solid #badbcc;
+}
+
+.connection-status.connected #connectionText {
+  color: #0f5132;
+  font-weight: 600;
+}
+
+.connection-status.connected #connectionSpinner {
+  display: none;
+}
+
+.connection-status.error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+}
+
+.connection-status.error #connectionText {
+  color: #721c24;
+  font-weight: 600;
+}
+
+.connection-status.error #connectionSpinner {
+  display: none;
+}
+
+.connection-status #connectionText {
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+/* Modal personalizado */
+.modal-content {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  border-radius: 15px 15px 0 0;
+}
+
+.modal-footer {
+  border-radius: 0 0 15px 15px;
+}
+
+/* Optimización de animaciones para mejor rendimiento */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  will-change: transform, opacity;
+}
+
+.logo-animation {
+  will-change: transform;
+}
+
+.card {
+  will-change: transform;
+}
+
+/* Mejoras responsive - Móvil (hasta 576px) */
 @media (max-width: 576px) {
+  body {
+    padding: 10px;
+  }
+  
   .card {
-    margin: 20px;
+    margin: 0;
     max-width: 100%;
+    padding: 20px 15px !important;
   }
   
   .logo-animation {
     height: 80px;
+  }
+  
+  h4 {
+    font-size: 1.25rem;
+  }
+  
+  .form-control, .form-select {
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+  
+  .btn-login {
+    padding: 14px;
+    font-size: 1rem;
+  }
+  
+  .connection-status {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .modal-dialog {
+    margin: 20px;
+  }
+}
+
+/* Mejoras responsive - Tablet (577px a 992px) */
+@media (min-width: 577px) and (max-width: 992px) {
+  .card {
+    max-width: 450px;
+    padding: 30px 25px !important;
+  }
+  
+  .logo-animation {
+    height: 110px;
+  }
+  
+  .connection-status {
+    padding: 10px 15px;
+  }
+}
+
+/* Mejoras responsive - Desktop (993px en adelante) */
+@media (min-width: 993px) {
+  .card {
+    max-width: 400px;
+  }
+  
+  .login-card:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Reducir animaciones en dispositivos que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  body::before {
+    animation: none;
+  }
+  
+  .logo-animation {
+    animation: none;
+  }
+}
+
+/* Mejoras de rendimiento */
+.form-control, .form-select, .btn {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimización para pantallas táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .btn-login:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .login-card:hover {
+    transform: none;
+  }
+  
+  .btn-toggle-password {
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .form-check-input {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
