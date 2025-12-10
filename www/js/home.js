@@ -1,4 +1,4 @@
-import { supabase } from './app.js';
+import {supabase} from '../backend/supabase/supabaseCliente.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
   await checkAuthAndRole();
@@ -128,10 +128,21 @@ function mostrarSoloHabilitados(idsHabilitados) {
 
 // 🚪 Cerrar sesión
 document.getElementById('logout-btn').addEventListener('click', async () => {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error('Error al cerrar sesión:', error.message);
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error al cerrar sesión:', error.message);
+      alert('No se pudo cerrar sesión. Intenta de nuevo.');
+      return;
+    }
+    
+    // Limpiar cualquier dato local adicional si es necesario
+    // (Supabase ya limpia la sesión automáticamente)
+    
+    // Redirigir al login
+    window.location.href = 'login.html';
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
     alert('No se pudo cerrar sesión. Intenta de nuevo.');
   }
-  window.location.href = 'login.html';
 });

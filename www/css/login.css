@@ -3,6 +3,8 @@ body {
   font-family: Roboto, sans-serif;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
 }
 
 body::before {
@@ -36,6 +38,9 @@ body::before {
   border: none;
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.95);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .login-card {
@@ -295,65 +300,6 @@ input:focus, select:focus {
   padding: 10px;
 }
 
-/* Indicador de Estado de Conexión */
-.connection-status {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-  transition: all 0.3s ease;
-  min-height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.connection-status.connected {
-  background-color: #d1e7dd;
-  border: 1px solid #badbcc;
-}
-
-.connection-status.connected #connectionText {
-  color: #0f5132;
-  font-weight: 600;
-}
-
-.connection-status.connected #connectionSpinner {
-  display: none;
-}
-
-.connection-status.error {
-  background-color: #f8d7da;
-  border: 1px solid #f5c2c7;
-}
-
-.connection-status.error #connectionText {
-  color: #721c24;
-  font-weight: 600;
-}
-
-.connection-status.error #connectionSpinner {
-  display: none;
-}
-
-.connection-status #connectionText {
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-}
-
-/* Modal personalizado */
-.modal-content {
-  border-radius: 15px;
-  border: none;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-}
-
-.modal-header {
-  border-radius: 15px 15px 0 0;
-}
-
-.modal-footer {
-  border-radius: 0 0 15px 15px;
-}
 
 /* Optimización de animaciones para mejor rendimiento */
 * {
@@ -373,8 +319,59 @@ body::before {
   will-change: transform;
 }
 
-/* Mejoras responsive - Móvil (hasta 576px) */
-@media (max-width: 576px) {
+/* === Responsive Design === */
+
+/* Móvil pequeño (hasta 375px) */
+@media (max-width: 375px) {
+  body {
+    padding: 8px;
+  }
+  
+  .card {
+    margin: 0;
+    max-width: 100%;
+    padding: 18px 12px !important;
+    border-radius: 15px;
+  }
+  
+  .logo-animation {
+    height: 70px;
+  }
+  
+  h4 {
+    font-size: 1.15rem;
+    margin-bottom: 1rem !important;
+  }
+  
+  .form-label {
+    font-size: 0.875rem;
+  }
+  
+  .form-control, .form-select {
+    font-size: 16px; /* Evita zoom en iOS */
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .input-group-text {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .btn-login {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+  
+  .form-check-label {
+    font-size: 0.875rem;
+  }
+  
+  .version-text {
+    font-size: 0.7rem;
+  }
+}
+
+/* Móvil (376px a 576px) */
+@media (min-width: 376px) and (max-width: 576px) {
   body {
     padding: 10px;
   }
@@ -401,19 +398,30 @@ body::before {
     padding: 14px;
     font-size: 1rem;
   }
-  
-  .connection-status {
-    padding: 6px 10px;
-    font-size: 0.8rem;
+}
+
+/* Tablet pequeña (577px a 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+  body {
+    padding: 15px;
   }
   
-  .modal-dialog {
-    margin: 20px;
+  .card {
+    max-width: 420px;
+    padding: 25px 20px !important;
+  }
+  
+  .logo-animation {
+    height: 100px;
+  }
+  
+  h4 {
+    font-size: 1.5rem;
   }
 }
 
-/* Mejoras responsive - Tablet (577px a 992px) */
-@media (min-width: 577px) and (max-width: 992px) {
+/* Tablet (769px a 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
   .card {
     max-width: 450px;
     padding: 30px 25px !important;
@@ -423,15 +431,35 @@ body::before {
     height: 110px;
   }
   
-  .connection-status {
-    padding: 10px 15px;
+  h4 {
+    font-size: 1.75rem;
   }
 }
 
-/* Mejoras responsive - Desktop (993px en adelante) */
-@media (min-width: 993px) {
+/* Desktop pequeño (993px a 1200px) */
+@media (min-width: 993px) and (max-width: 1200px) {
   .card {
     max-width: 400px;
+  }
+  
+  .login-card:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Desktop grande (1201px en adelante) */
+@media (min-width: 1201px) {
+  .card {
+    max-width: 420px;
+    padding: 35px 30px !important;
+  }
+  
+  .logo-animation {
+    height: 120px;
+  }
+  
+  h4 {
+    font-size: 2rem;
   }
   
   .login-card:hover {
@@ -484,5 +512,71 @@ body::before {
   .form-check-input {
     width: 1.5rem;
     height: 1.5rem;
+  }
+}
+
+/* Ajustes para orientación horizontal en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  body {
+    padding: 5px;
+  }
+  
+  .card {
+    padding: 15px 20px !important;
+    max-width: 90%;
+  }
+  
+  .logo-animation {
+    height: 60px;
+  }
+  
+  h4 {
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .mb-3 {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .text-center.mb-4 {
+    margin-bottom: 1rem !important;
+    padding: 0.5rem 0 !important;
+  }
+}
+
+/* Asegurar que los inputs sean accesibles en todas las resoluciones */
+.form-control:focus, .form-select:focus {
+  transform: scale(1.01);
+}
+
+/* Mejorar espaciado en dispositivos pequeños */
+@media (max-width: 576px) {
+  .input-group {
+    margin-bottom: 0.5rem;
+  }
+  
+  .validation-message {
+    font-size: 0.8rem;
+  }
+  
+  .error-message {
+    padding: 10px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Mejorar contraste y legibilidad en pantallas pequeñas */
+@media (max-width: 375px) {
+  .form-label {
+    margin-bottom: 0.4rem;
+  }
+  
+  .form-check {
+    margin-bottom: 0.75rem !important;
   }
 }
