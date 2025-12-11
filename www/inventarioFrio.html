@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
         <meta charset="utf-8">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
-        <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">            
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="css/casa.css">
-        <title>Inventario Frio</title>
+
+        <!-- 
+            inventario-frio.css: Estilos mejorados y reutilizables
+            - Mejora automáticamente el loader y botón home sin modificar archivos globales
+            - Proporciona estilos modernos para DataTables
+            - Puede ser importado en otras páginas (inventario.html, cliente.html, etc.)
+            - Las clases específicas usan prefijo "if-" para evitar conflictos
+        -->
+        <link rel="stylesheet" href="css/inventario-frio.css">
+        <title>Inventario Frío</title>
     </head>
 
     <body>
@@ -23,51 +29,132 @@
                 <div class="spinner"></div>
                 <p>Cargando...</p>
             </div>
-        </div>    
-                
-        <a href="home.html" class="home-button">
-            <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
-        </a>
-        <div class="container mt-5">
-
-            <h2 class="text-center">Inventario Frio</h2>
-            <button id="btnAgregar" class="btn btn-success mb-3">Agregar Nuevo</button>
-            <button id="btnAgregarEntradaSalida" class="btn btn-primary mb-3">Agregar Entrada/Salida</button>
-            <button id="btnEntradaSalida" class="btn btn-secondary mb-3" onclick="window.location.href='entradaSalidaFrio.html'">Ver Entrada/Salida</button>
-    
-            <table id="tablaProductos" class="table table-striped">
-                <thead>
-                    <tr>
-
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí se cargarán los datos dinámicamente -->
-                </tbody>
-            </table>
         </div>
         
+        <!-- Botón Home -->
+        <a href="home.html" class="home-button" aria-label="Volver al inicio">
+            <i class="fa fa-home"></i>
+        </a>
+
+        <!-- Contenedor principal -->
+        <main class="if-container">
+            <!-- Header de la página -->
+            <header class="if-header">
+                <h1>
+                    <i class="fa fa-snowflake-o"></i>
+                    <span>Inventario Frío</span>
+                </h1>
+            </header>
+
+            <!-- Sección de acciones -->
+            <section class="if-actions-section">
+                <div class="if-actions-grid">
+                    <button id="btnAgregar" class="if-btn if-btn-success" aria-label="Agregar nuevo producto">
+                        <i class="fa fa-plus"></i>
+                        <span>Agregar Nuevo</span>
+                    </button>
+                    <button id="btnAgregarEntradaSalida" class="if-btn if-btn-primary" aria-label="Agregar entrada o salida">
+                        <i class="fa fa-exchange"></i>
+                        <span>Entrada/Salida</span>
+                    </button>
+                    <button id="btnEntradaSalida" class="if-btn if-btn-secondary" onclick="window.location.href='entradaSalidaFrio.html'" aria-label="Ver historial de entradas y salidas">
+                        <i class="fa fa-list-alt"></i>
+                        <span>Ver Historial</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Sección de tabla -->
+            <section class="if-table-card">
+                <!-- Skeleton Loader -->
+                <div class="if-skeleton-container">
+                    <div class="if-skeleton-header">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                </div>
+
+                <!-- Tabla real (oculta hasta cargar) -->
+                <div class="if-table-wrapper">
+                    <table id="tablaProductos" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <!-- Las columnas se generan dinámicamente desde JS -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+        
         <!-- Modal para Agregar/Editar Producto -->
-        <div class="modal fade" id="modalFormulario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade if-modal" id="modalFormulario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Agregar/Editar Registro</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="modalLabel">
+                            <i class="fa fa-edit"></i>
+                            <span>Agregar/Editar Registro</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formulario">
                             <input type="hidden" id="id">
                             <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre" required>
+                                <label for="nombre" class="form-label">
+                                    <i class="fa fa-tag"></i> Nombre del Producto:
+                                </label>
+                                <input type="text" class="form-control" id="nombre" required placeholder="Ingrese el nombre del producto">
                             </div>
                             <div class="mb-3">
-                                <label for="und_producto" class="form-label">Unidades:</label>
-                                <input type="number" class="form-control" id="und_producto" value="0" min="0" required>
+                                <label for="und_producto" class="form-label">
+                                    <i class="fa fa-cubes"></i> Unidades:
+                                </label>
+                                <input type="number" class="form-control" id="und_producto" value="0" min="0" required placeholder="Cantidad de unidades">
                             </div>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <div class="d-flex gap-2 justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Guardar
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -75,32 +162,49 @@
         </div>
         
         <!-- Modal para Agregar Entrada/Salida -->
-        <div class="modal fade" id="modalEntradaSalida" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade if-modal" id="modalEntradaSalida" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalEntradaSalidaLabel">Agregar Entrada o Salida</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="modalEntradaSalidaLabel">
+                            <i class="fa fa-exchange"></i>
+                            <span>Agregar Entrada o Salida</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formEntradaSalida">
                             <div class="mb-3">
-                                <label for="productoSelect" class="form-label">Producto:</label>
-                                <select  class="form-control" id="productoSelect" required>
+                                <label for="productoSelect" class="form-label">
+                                    <i class="fa fa-box"></i> Producto:
+                                </label>
+                                <select class="form-control" id="productoSelect" required>
                                     <option value="">Selecciona un producto</option>
-                                    <!-- Se llenará dinámicamente  -->
+                                    <!-- Se llenará dinámicamente -->
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="cantidad" class="form-label">Cantidad:</label>
-                                <input type="number" class="form-control" id="cantidad" value="0" min="1"  required>
+                                <label for="cantidad" class="form-label">
+                                    <i class="fa fa-hashtag"></i> Cantidad:
+                                </label>
+                                <input type="number" class="form-control" id="cantidad" value="0" min="1" required placeholder="Ingrese la cantidad">
                             </div>
 
-                            <div id="mensajeErrorDatos" class="text-danger mt-2" style="display: none;">
+                            <div id="mensajeErrorDatos" class="text-danger mt-2" style="display: none;" role="alert">
                                 ⚠️ Datos incorrectos. Inténtalo de nuevo.
                             </div>
-                            <button type="submit" class="btn btn-success" id="btnAgregarEntrada">Agregar Entrada</button>
-                            <button type="submit" class="btn btn-danger" id="btnAgregarSalida">Agregar Salida</button>
+                            
+                            <div class="d-flex gap-2 justify-content-end mt-4">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success" id="btnAgregarEntrada">
+                                    <i class="fa fa-arrow-down"></i> Agregar Entrada
+                                </button>
+                                <button type="submit" class="btn btn-danger" id="btnAgregarSalida">
+                                    <i class="fa fa-arrow-up"></i> Agregar Salida
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -108,23 +212,35 @@
         </div>
         
         <!-- Modal de Confirmación para Eliminar -->
-        <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade if-modal" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmarLabel">Confirmar Eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="confirmarLabel">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <span>Confirmar Eliminación</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Estás seguro de que deseas eliminar este registro?</p>
+                        <p class="mb-0">
+                            <i class="fa fa-question-circle text-warning"></i>
+                            ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
+                        </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa fa-times"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
+                            <i class="fa fa-trash"></i> Eliminar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Scripts -->
         <script src="cordova.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

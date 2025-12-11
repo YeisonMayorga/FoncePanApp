@@ -1,0 +1,1133 @@
+/* 
+ * ===================================================================
+ * ESTILOS MEJORADOS Y REUTILIZABLES PARA PÁGINAS CON TABLAS
+ * ===================================================================
+ * 
+ * Este archivo puede ser importado en otras páginas HTML que usen 
+ * la misma estructura (inventario.html, cliente.html, etc.)
+ * 
+ * CARACTERÍSTICAS:
+ * - Mejora el loader global sin modificar styles.css
+ * - Mejora el botón home sin modificar casa.css
+ * - Proporciona estilos modernos para tablas DataTables
+ * - Incluye skeleton loaders para mejor UX
+ * - Totalmente responsive
+ * 
+ * USO:
+ * Simplemente agrega esta línea en el <head> de tu HTML:
+ * <link rel="stylesheet" href="css/inventario-frio.css">
+ * 
+ * Las clases específicas de inventarioFrio usan el prefijo "if-"
+ * Los componentes globales (loader, home-button) se mejoran automáticamente
+ * ===================================================================
+ */
+
+/* Variables CSS para consistencia */
+:root {
+    --if-primary: #007bff;
+    --if-success: #28a745;
+    --if-danger: #dc3545;
+    --if-warning: #ffc107;
+    --if-secondary: #6c757d;
+    --if-light: #f8f9fa;
+    --if-dark: #343a40;
+    --if-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --if-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --if-border-radius: 12px;
+    --if-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --if-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --if-gradient-loader: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+body {
+    font-family: Roboto, sans-serif;
+}
+/* ============================================
+   MEJORAS AL LOADER GLOBAL (Reutilizable)
+   ============================================ */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    animation: fadeInLoader 0.3s ease-in;
+}
+
+@keyframes fadeInLoader {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.loader-content {
+    text-align: center;
+    animation: pulseContent 2s ease-in-out infinite;
+}
+
+@keyframes pulseContent {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.loader-content p {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #343a40;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: var(--if-gradient-loader);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 2s ease-in-out infinite;
+}
+
+@keyframes shimmerText {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(102, 126, 234, 0.1);
+    border-top: 6px solid #667eea;
+    border-right: 6px solid #764ba2;
+    border-radius: 50%;
+    animation: spinEnhanced 1s linear infinite;
+    position: relative;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.spinner::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(118, 75, 162, 0.2);
+    border-top: 3px solid #764ba2;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: spinEnhanced 0.7s linear infinite reverse;
+}
+
+@keyframes spinEnhanced {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Ocultar contenido hasta que el JS lo muestre */
+body.loaded #loader {
+    display: none;
+    animation: fadeOutLoader 0.3s ease-out;
+}
+
+@keyframes fadeOutLoader {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+body:not(.loaded) .container,
+body:not(.loaded) .home-button,
+body:not(.loaded) .if-container {
+    display: none !important;
+}
+
+/* ============================================
+   MEJORAS AL BOTÓN HOME (Reutilizable)
+   ============================================ */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--if-gradient-primary);
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: var(--if-transition);
+    z-index: 1000;
+    text-decoration: none;
+    animation: slideInHomeButton 0.5s ease-out 0.3s both;
+    overflow: hidden;
+}
+
+@keyframes slideInHomeButton {
+    from {
+        opacity: 0;
+        transform: translateX(-20px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.home-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.home-button:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+.home-button:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+}
+
+.home-button:active {
+    transform: translateY(-1px) scale(1.05);
+}
+
+.home-button i {
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+    transition: var(--if-transition);
+}
+
+.home-button:hover i {
+    transform: rotate(360deg);
+}
+
+/* Mejora también para back-button si existe */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--if-gradient-primary);
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: var(--if-transition);
+    z-index: 1000;
+    text-decoration: none;
+    animation: slideInHomeButton 0.5s ease-out 0.3s both;
+    overflow: hidden;
+}
+
+.back-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.back-button:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+.back-button:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+}
+
+.back-button:active {
+    transform: translateY(-1px) scale(1.05);
+}
+
+.back-button i {
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+    transition: var(--if-transition);
+}
+
+.back-button:hover i {
+    transform: rotate(-360deg);
+}
+
+/* Responsive para botones home/back */
+@media (max-width: 768px) {
+    .home-button,
+    .back-button {
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        left: 15px;
+    }
+
+    .home-button i,
+    .back-button i {
+        font-size: 20px;
+    }
+}
+
+/* ============================================
+   ESTILOS REUTILIZABLES PARA TABLAS
+   (Pueden usarse en otras páginas)
+   ============================================ */
+
+/* Mejoras genéricas a DataTables - aplicables a cualquier tabla */
+.dataTables_wrapper {
+    margin-top: 20px;
+}
+
+.dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.dataTables_filter input {
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    transition: var(--if-transition);
+    margin-left: 10px;
+}
+
+.dataTables_filter input:focus {
+    outline: none;
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.dataTables_length label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.dataTables_length select {
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    transition: var(--if-transition);
+    margin: 0 10px;
+}
+
+.dataTables_length select:focus {
+    outline: none;
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.dataTables_info {
+    padding: 10px 0;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.dataTables_paginate {
+    margin-top: 15px;
+}
+
+.dataTables_paginate .paginate_button {
+    padding: 8px 12px;
+    margin: 0 3px;
+    border-radius: 6px;
+    transition: var(--if-transition);
+    border: 1px solid #dee2e6;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background: var(--if-primary) !important;
+    color: white !important;
+    transform: translateY(-2px);
+    border-color: var(--if-primary);
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: var(--if-primary) !important;
+    color: white !important;
+    border-color: var(--if-primary);
+}
+
+.dataTables_paginate .paginate_button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Mejoras genéricas a botones de acción en tablas */
+.btnEditar,
+.btnEliminar {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: var(--if-transition);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 3px;
+    white-space: nowrap;
+}
+
+.btnEditar {
+    background: var(--if-warning);
+    color: #212529;
+}
+
+.btnEditar:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btnEditar:active {
+    transform: translateY(0);
+}
+
+.btnEliminar {
+    background: var(--if-danger);
+    color: white;
+}
+
+.btnEliminar:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btnEliminar:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   ESTILOS ESPECÍFICOS PARA INVENTARIO FRÍO
+   (Usan prefijo "if-" para evitar conflictos)
+   ============================================ */
+
+/* Contenedor principal mejorado */
+.if-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header mejorado */
+.if-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: var(--if-border-radius);
+    box-shadow: var(--if-shadow);
+    margin-bottom: 30px;
+    animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.if-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.if-header h1 i {
+    font-size: 1.8rem;
+}
+
+/* Sección de acciones (botones) */
+.if-actions-section {
+    background: white;
+    padding: 25px;
+    border-radius: var(--if-border-radius);
+    box-shadow: var(--if-shadow);
+    margin-bottom: 30px;
+    animation: fadeIn 0.7s ease-in 0.2s both;
+}
+
+.if-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.if-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--if-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.if-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.if-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.if-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--if-shadow-hover);
+}
+
+.if-btn:active {
+    transform: translateY(0);
+}
+
+.if-btn-success {
+    background: var(--if-success);
+    color: white;
+}
+
+.if-btn-primary {
+    background: var(--if-primary);
+    color: white;
+}
+
+.if-btn-secondary {
+    background: var(--if-secondary);
+    color: white;
+}
+
+/* Card para la tabla */
+.if-table-card {
+    background: white;
+    border-radius: var(--if-border-radius);
+    box-shadow: var(--if-shadow);
+    padding: 25px;
+    animation: fadeIn 0.8s ease-in 0.3s both;
+    overflow: hidden;
+}
+
+.if-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Skeleton loader para la tabla */
+.if-skeleton-container {
+    display: none;
+    padding: 20px;
+    min-height: 400px;
+}
+
+body:not(.loaded) .if-skeleton-container {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+body.loaded .if-skeleton-container {
+    display: none;
+}
+
+.if-skeleton-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    min-height: 50px;
+}
+
+.if-skeleton-row {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    animation: pulse 1.5s ease-in-out infinite;
+    min-height: 60px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.if-skeleton-cell {
+    flex: 1;
+    height: 16px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.if-skeleton-header .if-skeleton-cell {
+    background: linear-gradient(90deg, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.3) 75%);
+    background-size: 200% 100%;
+    height: 20px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.if-skeleton-cell:nth-child(1) {
+    flex: 2;
+    max-width: 300px;
+}
+
+.if-skeleton-cell:nth-child(2) {
+    flex: 1;
+    max-width: 120px;
+}
+
+.if-skeleton-cell:nth-child(3) {
+    flex: 1.5;
+    max-width: 200px;
+}
+
+/* Responsive skeleton */
+@media (max-width: 768px) {
+    .if-skeleton-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .if-skeleton-cell {
+        max-width: 100% !important;
+        width: 100%;
+    }
+
+    .if-skeleton-cell:nth-child(3) {
+        height: 40px;
+    }
+}
+
+/* Ocultar tabla real hasta que cargue */
+body:not(.loaded) .if-table-card .if-table-wrapper {
+    display: none !important;
+}
+
+body.loaded .if-table-card .if-table-wrapper {
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Asegurar que el contenido principal esté oculto hasta cargar */
+body:not(.loaded) .if-container {
+    display: none !important;
+}
+
+body.loaded .if-container {
+    display: block;
+}
+
+/* Mejoras a la tabla DataTables */
+.if-table-card #tablaProductos {
+    width: 100% !important;
+    margin: 0;
+}
+
+.if-table-card #tablaProductos thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    padding: 15px;
+    text-align: left;
+    border: none;
+    position: relative;
+}
+
+.if-table-card #tablaProductos thead th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.if-table-card #tablaProductos thead th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.if-table-card #tablaProductos tbody tr {
+    transition: var(--if-transition);
+    border-bottom: 1px solid #e9ecef;
+}
+
+.if-table-card #tablaProductos tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.if-table-card #tablaProductos tbody td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+/* Botones de acción en la tabla */
+.if-table-card .btnEditar,
+.if-table-card .btnEliminar {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: var(--if-transition);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 3px;
+    white-space: nowrap;
+}
+
+.if-table-card .btnEditar {
+    background: var(--if-warning);
+    color: #212529;
+}
+
+.if-table-card .btnEditar:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.if-table-card .btnEditar:active {
+    transform: translateY(0);
+}
+
+.if-table-card .btnEliminar {
+    background: var(--if-danger);
+    color: white;
+}
+
+.if-table-card .btnEliminar:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.if-table-card .btnEliminar:active {
+    transform: translateY(0);
+}
+
+/* Contenedor de botones de acción */
+.if-table-card tbody td:last-child {
+    white-space: nowrap;
+}
+
+/* Mejoras a DataTables controls */
+.if-table-card .dataTables_wrapper {
+    margin-top: 20px;
+}
+
+.if-table-card .dataTables_filter {
+    margin-bottom: 15px;
+}
+
+.if-table-card .dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.if-table-card .dataTables_filter input {
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    transition: var(--if-transition);
+    margin-left: 10px;
+}
+
+.if-table-card .dataTables_filter input:focus {
+    outline: none;
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.if-table-card .dataTables_length {
+    margin-bottom: 15px;
+}
+
+.if-table-card .dataTables_length label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.if-table-card .dataTables_length select {
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    transition: var(--if-transition);
+    margin: 0 10px;
+}
+
+.if-table-card .dataTables_length select:focus {
+    outline: none;
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.if-table-card .dataTables_info {
+    padding: 10px 0;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.if-table-card .dataTables_paginate {
+    margin-top: 15px;
+}
+
+.if-table-card .dataTables_paginate .paginate_button {
+    padding: 8px 12px;
+    margin: 0 3px;
+    border-radius: 6px;
+    transition: var(--if-transition);
+    border: 1px solid #dee2e6;
+}
+
+.if-table-card .dataTables_paginate .paginate_button:hover {
+    background: var(--if-primary) !important;
+    color: white !important;
+    transform: translateY(-2px);
+    border-color: var(--if-primary);
+}
+
+.if-table-card .dataTables_paginate .paginate_button.current {
+    background: var(--if-primary) !important;
+    color: white !important;
+    border-color: var(--if-primary);
+}
+
+.if-table-card .dataTables_paginate .paginate_button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Modales mejorados */
+.if-modal .modal-content {
+    border-radius: var(--if-border-radius);
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.if-modal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: var(--if-border-radius) var(--if-border-radius) 0 0;
+    padding: 20px 25px;
+    border-bottom: none;
+}
+
+.if-modal .modal-header .modal-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.if-modal .modal-header .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
+.if-modal .modal-body {
+    padding: 25px;
+}
+
+.if-modal .form-label {
+    font-weight: 500;
+    color: var(--if-dark);
+    margin-bottom: 8px;
+}
+
+.if-modal .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: var(--if-transition);
+}
+
+.if-modal .form-control:focus {
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
+}
+
+.if-modal .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--if-transition);
+}
+
+.if-modal .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mensaje de error mejorado */
+#mensajeErrorDatos {
+    padding: 12px 15px;
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    color: #856404;
+    font-weight: 500;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .if-container {
+        padding: 15px;
+    }
+
+    .if-header {
+        padding: 20px;
+    }
+
+    .if-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .if-actions-section {
+        padding: 20px;
+    }
+
+    .if-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .if-btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 0.95rem;
+    }
+
+    .if-table-card {
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .if-table-card #tablaProductos {
+        font-size: 0.9rem;
+    }
+
+    .if-table-card #tablaProductos thead th,
+    .if-table-card #tablaProductos tbody td {
+        padding: 10px 8px;
+    }
+
+    .if-table-card .btnEditar,
+    .if-table-card .btnEliminar {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        margin: 2px;
+    }
+
+    /* DataTables responsive en móvil */
+    .if-table-card .dataTables_wrapper .dataTables_filter,
+    .if-table-card .dataTables_wrapper .dataTables_length {
+        margin-bottom: 15px;
+    }
+
+    .if-table-card .dataTables_wrapper .dataTables_filter input,
+    .if-table-card .dataTables_wrapper .dataTables_length select {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .if-table-card .dataTables_wrapper .dataTables_paginate {
+        margin-top: 15px;
+    }
+
+    .if-modal .modal-dialog {
+        margin: 10px;
+    }
+
+    .if-modal .modal-body {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .if-header h1 {
+        font-size: 1.3rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .if-header h1 i {
+        font-size: 1.5rem;
+    }
+
+    .if-table-card #tablaProductos {
+        font-size: 0.85rem;
+    }
+
+    .if-table-card .btnEditar,
+    .if-table-card .btnEliminar {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    /* Stack botones de acción en móvil muy pequeño */
+    .if-table-card tbody td:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .if-table-card .btnEditar,
+    .if-table-card .btnEliminar {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Mejoras para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .if-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Animación de entrada para el contenido */
+.if-content-ready {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
