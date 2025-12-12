@@ -3,18 +3,31 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
-        <link rel="stylesheet" href="css/despachoadmin.css">
-        <link rel="stylesheet" href="css/casa.css">
+        
+        <!-- 🎨 Estilos mejorados reutilizables -->
+        <link rel="stylesheet" href="css/inventario-frio.css">
+        
         <title>Mis Despachos - Sucursal</title>
     </head>
     <body>
-        <a href="home.html" class="home-button">
-            <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
+        <!-- Loader global -->
+        <div id="loader" class="loader-overlay">
+            <div class="loader-content">
+                <div class="spinner"></div>
+                <p>Cargando...</p>
+            </div>
+        </div>
+
+        <!-- Botón Home mejorado -->
+        <a href="home.html" class="home-button" aria-label="Volver al inicio">
+            <i class="fa fa-home"></i>
         </a>
+
         <!-- Campana de notificaciones -->
         <div class="position-fixed top-0 end-0 p-3 z-3" style="z-index: 1055;">
             <button class="btn btn-light position-relative" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
@@ -24,12 +37,16 @@
                 </span>
             </button>
         </div>
+
         <!-- Modal de notificaciones -->
-        <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
+        <div class="modal fade if-modal" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Notificaciones</h5>
+                        <h5 class="modal-title">
+                            <i class="bi bi-bell-fill"></i>
+                            <span>Notificaciones</span>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
@@ -38,33 +55,35 @@
                 </div>
             </div>
         </div>
+
         <!-- Modal Nueva Solicitud -->
-        <div class="modal fade" id="modalNuevaSolicitud" tabindex="-1" aria-labelledby="modalNuevaSolicitudLabel" aria-hidden="true">
+        <div class="modal fade if-modal" id="modalNuevaSolicitud" tabindex="-1" aria-labelledby="modalNuevaSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Crear nueva solicitud</h5>
+                        <h5 class="modal-title">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Crear nueva solicitud</span>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <!-- 🔍 Buscador global -->
                         <div class="mb-3">
-                        <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto en todas las secciones...">
+                            <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto en todas las secciones...">
                         </div>
                     </div>      
                     <div>
-                        <h4 class="ms-3">Punto de venta</h4>
+                        <h4 class="ms-3 text-primary"><i class="fa fa-shopping-cart"></i> Punto de venta</h4>
                         <div class="modal-body">
                             <table id="tablaProductosSolicitud1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                    <th>Producto</th>
-                                    <th>Proveedor</th>
-                                    
-                                    <th>Unidad</th>
-                                    <th>Und Disponible</th>
-                                    <th>Cantidad a solicitar</th>
-                                    
+                                        <th>Producto</th>
+                                        <th>Proveedor</th>
+                                        <th>Unidad</th>
+                                        <th>Und Disponible</th>
+                                        <th>Cantidad a solicitar</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -72,16 +91,16 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="ms-3">Panadería</h4>
+                        <h4 class="ms-3 text-warning"><i class="fa fa-birthday-cake"></i> Panadería</h4>
                         <div class="modal-body">
                             <table id="tablaProductosSolicitud2" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                    <th>Producto</th>
-                                    <th>Proveedor</th>
-                                    <th>Unidad</th>
-                                    <th>Und Disponible</th>
-                                    <th>Cantidad a solicitar</th>
+                                        <th>Producto</th>
+                                        <th>Proveedor</th>
+                                        <th>Unidad</th>
+                                        <th>Und Disponible</th>
+                                        <th>Cantidad a solicitar</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -89,16 +108,16 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="ms-3">Bebidas</h4>
+                        <h4 class="ms-3 text-info"><i class="fa fa-glass"></i> Bebidas</h4>
                         <div class="modal-body">
                             <table id="tablaProductosSolicitud3" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                    <th>Producto</th>
-                                    <th>Proveedor</th>
-                                    <th>Unidad</th>
-                                    <th>Und Disponible</th>
-                                    <th>Cantidad a solicitar</th>
+                                        <th>Producto</th>
+                                        <th>Proveedor</th>
+                                        <th>Unidad</th>
+                                        <th>Und Disponible</th>
+                                        <th>Cantidad a solicitar</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -106,98 +125,157 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" id="btnEnviarSolicitud">Enviar Solicitud</button>
+                        <button class="btn btn-primary" id="btnEnviarSolicitud">
+                            <i class="fa fa-paper-plane"></i> Enviar Solicitud
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container py-4">
-            <h2 class="mb-4">Mis Solicitudes de Despacho</h2>
-            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNuevaSolicitud">
-                Nueva Solicitud
-            </button>
 
-            <table id="tablaDespachosSucursal" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                    <th>ID</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                    <th>Total Productos</th>
-                    <th>Total Enviado</th>
-                    <th>Total Recibido</th>
-                    <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <!-- Modal Detalle -->
-        <div class="modal fade" id="modalDetalleSucursal" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+        <!-- Contenedor principal con estilos mejorados -->
+        <main class="if-container">
+            <header class="if-header">
+                <h1>
+                    <i class="fa fa-list-alt"></i>
+                    <span>Mis Solicitudes de Despacho</span>
+                </h1>
+            </header>
+
+            <!-- Botón nueva solicitud -->
+            <section class="if-actions-section">
+                <div class="if-actions-grid">
+                    <button class="if-btn if-btn-success" data-bs-toggle="modal" data-bs-target="#modalNuevaSolicitud" aria-label="Nueva solicitud">
+                        <i class="fa fa-plus"></i>
+                        <span>Nueva Solicitud</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Sección de tabla con estilos mejorados -->
+            <section class="if-table-card">
+                <!-- Skeleton Loader -->
+                <div class="if-skeleton-container">
+                    <div class="if-skeleton-header">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                </div>
+
+                <div class="if-table-wrapper">
+                    <table id="tablaDespachosSucursal" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Total Productos</th>
+                                <th>Total Enviado</th>
+                                <th>Total Recibido</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal Detalle con estilos mejorados -->
+        <div class="modal fade if-modal" id="modalDetalleSucursal" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Detalle del Despacho</h5>
+                        <h5 class="modal-title">
+                            <i class="fa fa-eye"></i>
+                            <span>Detalle del Despacho</span>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <h4>Punto de venta</h4>
-                            <table class="table table-sm" id="tablaDetalleSucursal">
+                        <div class="mb-4">
+                            <h4 class="text-center mb-3"><i class="fa fa-shopping-cart text-primary"></i> Punto de venta</h4>
+                            <table class="table table-sm table-hover" id="tablaDetalleSucursal">
                                 <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Solicitado</th>
-                                    <th>Enviado</th>
-                                    <th>Recibido</th>
-                                </tr>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Solicitado</th>
+                                        <th>Enviado</th>
+                                        <th>Recibido</th>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
                         </div>
-                        <div>
-                            <h4>Panadería</h4>
-                            <table class="table table-sm" id="tablaDetalleSucursal2">
+                        <div class="mb-4">
+                            <h4 class="text-center mb-3"><i class="fa fa-birthday-cake text-warning"></i> Panadería</h4>
+                            <table class="table table-sm table-hover" id="tablaDetalleSucursal2">
                                 <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Solicitado</th>
-                                    <th>Enviado</th>
-                                    <th>Recibido</th>
-                                </tr>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Solicitado</th>
+                                        <th>Enviado</th>
+                                        <th>Recibido</th>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>            
                         </div>
                         <div>
-                            <h4>Bebidas</h4>
-                            <table class="table table-sm" id="tablaDetalleSucursal3">
+                            <h4 class="text-center mb-3"><i class="fa fa-glass text-info"></i> Bebidas</h4>
+                            <table class="table table-sm table-hover" id="tablaDetalleSucursal3">
                                 <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Solicitado</th>
-                                    <th>Enviado</th>
-                                    <th>Recibido</th>
-                                </tr>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Solicitado</th>
+                                        <th>Enviado</th>
+                                        <th>Recibido</th>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>            
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnDevoluciones" class="btn btn-danger" data-despacho-id="">Devolver</button>
-                        <button id="btnConfirmarRecepcion" class="btn btn-success">Confirmar recepción</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button id="btnDevoluciones" class="btn btn-danger" data-despacho-id="">
+                            <i class="fa fa-undo"></i> Devolver
+                        </button>
+                        <button id="btnConfirmarRecepcion" class="btn btn-success">
+                            <i class="fa fa-check"></i> Confirmar recepción
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa fa-times"></i> Cerrar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Modal hacer Devolución -->
-        <div class="modal fade" id="modalDevolucion" tabindex="-1" aria-hidden="true">
+        <div class="modal fade if-modal" id="modalDevolucion" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Registrar Devolución</h5>
+                        <h5 class="modal-title">
+                            <i class="fa fa-undo"></i>
+                            <span>Registrar Devolución</span>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -205,21 +283,29 @@
                             <input type="hidden" id="input_despacho" />
                             <div id="productos_devolver"></div>
                             <div class="mb-3">
-                                <label class="form-label">Observaciones</label>
+                                <label class="form-label">
+                                    <i class="fa fa-comment"></i> Observaciones
+                                </label>
                                 <textarea class="form-control" id="observaciones_dev"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-danger">Registrar devolución</button>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa fa-save"></i> Registrar devolución
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Modal Ver Devolución -->
-        <div class="modal fade" id="modalVerDevolucion" tabindex="-1" aria-labelledby="modalVerDevolucionLabel" aria-hidden="true">
+        <div class="modal fade if-modal" id="modalVerDevolucion" tabindex="-1" aria-labelledby="modalVerDevolucionLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalVerDevolucionLabel">Detalles de la Devolución</h5>
+                        <h5 class="modal-title" id="modalVerDevolucionLabel">
+                            <i class="fa fa-undo"></i>
+                            <span>Detalles de la Devolución</span>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
@@ -231,12 +317,12 @@
                 </div>
             </div>
         </div>
+
         <script src="cordova.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script type="module" src="js/despachosucursal.js"></script>
     </body>
 </html>

@@ -4,6 +4,8 @@ let idDespachoSeleccionado = null;
 let estadoDespachoActual = null;
 let devoluciones = [];
 $(document).ready(async () => {
+    // Evita que se muestre la página antes de tiempo
+    document.body.classList.remove('loaded');    
     let rolUsuario;
     checkAuthAndRole();
     const idRol = await checkAuthAndRole();
@@ -112,6 +114,10 @@ $(document).ready(async () => {
             })
             );
             callback({ data: despachosFormateados });
+            // Al final de la carga inicial de la tabla, después del callback
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 300);            
         },
         language: {
         lengthMenu: "Mostrar _MENU_ registros por página",
