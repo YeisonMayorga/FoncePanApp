@@ -716,13 +716,13 @@ body.loaded .if-container {
     display: block;
 }
 
-/* Mejoras a la tabla DataTables */
-.if-table-card #tablaProductos {
+/* Mejoras a la tabla DataTables (aplican a cualquier tabla dentro de if-table-card) */
+.if-table-card table {
     width: 100% !important;
     margin: 0;
 }
 
-.if-table-card #tablaProductos thead th {
+.if-table-card table thead th {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-weight: 600;
@@ -732,26 +732,26 @@ body.loaded .if-container {
     position: relative;
 }
 
-.if-table-card #tablaProductos thead th:first-child {
+.if-table-card table thead th:first-child {
     border-top-left-radius: 8px;
 }
 
-.if-table-card #tablaProductos thead th:last-child {
+.if-table-card table thead th:last-child {
     border-top-right-radius: 8px;
 }
 
-.if-table-card #tablaProductos tbody tr {
+.if-table-card table tbody tr {
     transition: var(--if-transition);
     border-bottom: 1px solid #e9ecef;
 }
 
-.if-table-card #tablaProductos tbody tr:hover {
+.if-table-card table tbody tr:hover {
     background-color: #f8f9fa;
     transform: scale(1.01);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.if-table-card #tablaProductos tbody td {
+.if-table-card table tbody td {
     padding: 15px;
     vertical-align: middle;
 }

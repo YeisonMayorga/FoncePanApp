@@ -43,10 +43,10 @@ async function checkAuthAndRole() {
         'btn-estadistica',
         'btn-despachoAdmin',
         'btn-controlDespacho',
-        //'btn-clientes',
-        //'btn-congelacion',
-        //'btn-inventario-No-Controlado',
-        //'btn-pedidosProduccion'
+        'btn-clientes',
+        'btn-congelacion',
+        'btn-inventario-No-Controlado',
+        'btn-pedidosProduccion'
       ]);
       break;
 

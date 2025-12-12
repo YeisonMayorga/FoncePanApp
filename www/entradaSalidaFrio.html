@@ -11,8 +11,7 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">            
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/styles.css">        
-        <link rel="stylesheet" href="css/casa.css">
+        <link rel="stylesheet" href="css/inventario-frio.css">
         <title>Entrada</title>
     </head>
     <body>
@@ -23,94 +22,156 @@
                 <p>Cargando...</p>
             </div>
         </div>  
-                
-        <a href="home.html" class="home-button">
-            <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
-        </a>
 
-        <a href="inventarioFrio.html" class="back-button">
+        <a href="inventarioFrio.html" class="back-button" aria-label="Volver al inventario frío">
             <i class="fa fa-reply"></i> <!-- Icono de Font Awesome -->
         </a>
 
-        <div class="container mt-5">
-            <h2 class="text-center">Entradas</h2>
-            <button id="btnAgregarEntradaSalida" class="btn btn-success mb-3">Agregar Entrada</button>
-            <table id="tablaEntradas" class="table table-striped">
-                <thead>
-                    <tr>
+        <main class="if-container">
+            <header class="if-header">
+                <h1>
+                    <i class="fa fa-snowflake-o"></i>
+                    <span>Entradas y Salidas - Cuarto Frío</span>
+                </h1>
+            </header>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí se cargarán los datos dinámicamente -->
-                </tbody>
-            </table>
-        </div>
+            <section class="if-actions-section">
+                <div class="if-actions-grid">
+                    <button id="btnAgregarEntradaSalida" class="if-btn if-btn-success" aria-label="Agregar entrada">
+                        <i class="fa fa-arrow-down"></i>
+                        <span>Agregar Entrada</span>
+                    </button>
+                    <button id="btnAgregarSalidaEntrada" class="if-btn if-btn-primary" aria-label="Agregar salida">
+                        <i class="fa fa-arrow-up"></i>
+                        <span>Agregar Salida</span>
+                    </button>
+                </div>
+            </section>
 
-        <div class="container mt-5">
-            <h2 class="text-center">Salidas</h2>
-            <button id="btnAgregarSalidaEntrada" class="btn btn-success mb-3">Agregar Salida</button>
-            <table id="tablaSalidas" class="table table-striped">
-                <thead>
-                    <tr>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí se cargarán los datos dinámicamente -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Modal para Agregar/Editar Producto -->
-        <div class="modal fade" id="modalFormulario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Agregar/Editar Registro</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <section class="if-table-card">
+                <header class="mb-3">
+                    <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+                        <i class="fa fa-arrow-down text-success"></i>
+                        <span>Entradas</span>
+                    </h2>
+                </header>
+                <div class="if-skeleton-container">
+                    <div class="if-skeleton-header">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
                     </div>
-                    <div class="modal-body">
-                        <form id="formulario">
-                            <input type="hidden" id="id">
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="und_producto" class="form-label">Unidades:</label>
-                                <input type="number" class="form-control" id="und_producto" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </form>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="if-table-wrapper">
+                    <table id="tablaEntradas" class="table table-striped">
+                        <thead>
+                            <tr>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí se cargarán los datos dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="if-table-card mt-4">
+                <header class="mb-3">
+                    <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+                        <i class="fa fa-arrow-up text-danger"></i>
+                        <span>Salidas</span>
+                    </h2>
+                </header>
+                <div class="if-skeleton-container">
+                    <div class="if-skeleton-header">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                    <div class="if-skeleton-row">
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                        <div class="if-skeleton-cell"></div>
+                    </div>
+                </div>
+                <div class="if-table-wrapper">
+                    <table id="tablaSalidas" class="table table-striped">
+                        <thead>
+                            <tr>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí se cargarán los datos dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
 
         <!-- Modal para Agregar Entrada/Salida -->
-        <div class="modal fade" id="modalEntradaSalida" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade if-modal" id="modalEntradaSalida" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalEntradaSalidaLabel">Agregar Entrada o Salida</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="modalEntradaSalidaLabel">
+                            <i class="fa fa-exchange me-2"></i> 
+                            <span>Agregar Entrada</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formEntradaSalida">
                             <div class="mb-3">
-                                <label for="productoSelect" class="form-label">Producto:</label>
+                                <label for="productoSelect" class="form-label">
+                                    <i class="fa fa-tag"></i> Producto:
+                                </label>
                                 <select class="form-control" id="productoSelect" required>
                                     <option value="">Selecciona un producto</option>
                                     <!-- Se llenará dinámicamente -->
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="cantidad" class="form-label">Cantidad:</label>
-                                <input type="number" class="form-control" id="cantidad" value="0" min="0"  required>
+                                <label for="cantidad" class="form-label">
+                                    <i class="fa fa-hashtag"></i> Cantidad:
+                                </label>
+                                <input type="number" class="form-control" id="cantidad" value="0" min="0"  required placeholder="Ingrese la cantidad">
                             </div>
 
-                            <button type="submit" class="btn btn-primary" id="btnAgregarEntrada">Guardar</button>
+                            <div class="d-flex gap-2 justify-content-end mt-4">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success" id="btnAgregarEntrada">
+                                    <i class="fa fa-arrow-down"></i> Guardar
+                                </button>
+                            </div>
                             
                         </form>
                     </div>
@@ -119,30 +180,44 @@
         </div>
 
         <!-- Modal para Agregar Salida/Entrada -->
-        <div class="modal fade" id="modalSalidaEntrada" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade if-modal" id="modalSalidaEntrada" tabindex="-1" aria-labelledby="modalEntradaSalidaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalEntradaSalidaLabel">Agregar Entrada o Salida</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="modalEntradaSalidaLabel">
+                            <i class="fa fa-exchange me-2"></i> 
+                            <span>Agregar Salida</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formSalidaEntrada">
                             <div class="mb-3">
-                                <label for="productoSelect" class="form-label">Producto:</label>
+                                <label for="productoSelect" class="form-label">
+                                    <i class="fa fa-tag"></i> Producto:
+                                </label>
                                 <select class="form-control" id="productoSelect1" required>
                                     <option value="">Selecciona un producto</option>
                                     <!-- Se llenará dinámicamente -->
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="cantidad" class="form-label">Cantidad:</label>
-                                <input type="number" class="form-control" id="cantidad1" value="0" min="0"  required>
+                                <label for="cantidad" class="form-label">
+                                    <i class="fa fa-hashtag"></i> Cantidad:
+                                </label>
+                                <input type="number" class="form-control" id="cantidad1" value="0" min="0"  required placeholder="Ingrese la cantidad">
                             </div>
                             <div id="mensajeErrorDatos" class="text-danger mt-2" style="display: none;">
                                 ⚠️ Datos incorrectos. Inténtalo de nuevo.
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btnAgregarSalida">Guardar</button>
+                            <div class="d-flex gap-2 justify-content-end mt-4">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-danger" id="btnAgregarSalida">
+                                    <i class="fa fa-arrow-up"></i> Guardar
+                                </button>
+                            </div>
                             
                         </form>
                     </div>
@@ -151,19 +226,29 @@
         </div>  
 
         <!-- Modal de Confirmación para Eliminar -->
-        <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade if-modal" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmarLabel">Confirmar Eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="confirmarLabel">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <span>Confirmar Eliminación</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Estás seguro de que deseas eliminar este registro?</p>
+                        <p class="mb-0">
+                            <i class="fa fa-question-circle text-warning"></i>
+                            ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
+                        </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa fa-times"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
+                            <i class="fa fa-trash"></i> Eliminar
+                        </button>
                     </div>
                 </div>
             </div>

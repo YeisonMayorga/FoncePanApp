@@ -1,3 +1,20 @@
+/* Variables CSS para consistencia */
+:root {
+    --if-primary: #007bff;
+    --if-success: #28a745;
+    --if-danger: #dc3545;
+    --if-warning: #ffc107;
+    --if-secondary: #6c757d;
+    --if-light: #f8f9fa;
+    --if-dark: #343a40;
+    --if-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --if-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --if-border-radius: 12px;
+    --if-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --if-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --if-gradient-loader: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 /* ------------------------- */
 /*    CUERPO DE LA PAGINA    */ 
 /* ------------------------- */
