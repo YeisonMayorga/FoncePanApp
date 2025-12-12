@@ -1,6 +1,8 @@
 import {supabase} from '../backend/supabase/supabaseCliente.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
+  // Evita que se muestre la página antes de tiempo
+  document.body.classList.remove('loaded');
   await checkAuthAndRole();
 });
 
@@ -27,8 +29,11 @@ async function checkAuthAndRole() {
     return;
   }
 
+  
   // ✅ Oculta el loader y muestra el contenedor principal
-  document.getElementById('loading').style.display = 'none';
+  setTimeout(() => {
+    document.body.classList.add('loaded');  
+  }, 300); 
   document.getElementById('app-content').style.display = 'block';
   document.getElementById('logout-btn').style.display = 'block';
 

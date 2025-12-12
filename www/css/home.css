@@ -203,15 +203,125 @@ body {
 /* ------------------------- */
 /*        LOADER             */
 /* ------------------------- */
-#loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 70vh;
-  color: #333;
-  font-weight: 500;
-  font-size: 18px;
+/* ============================================
+   MEJORAS AL LOADER GLOBAL (Reutilizable)
+   ============================================ */
+   .loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    animation: fadeInLoader 0.3s ease-in;
+}
+
+@keyframes fadeInLoader {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.loader-content {
+    text-align: center;
+    animation: pulseContent 2s ease-in-out infinite;
+}
+
+@keyframes pulseContent {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.loader-content p {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #343a40;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: var(--if-gradient-loader);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 2s ease-in-out infinite;
+}
+
+@keyframes shimmerText {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(102, 126, 234, 0.1);
+    border-top: 6px solid #667eea;
+    border-right: 6px solid #764ba2;
+    border-radius: 50%;
+    animation: spinEnhanced 1s linear infinite;
+    position: relative;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.spinner::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(118, 75, 162, 0.2);
+    border-top: 3px solid #764ba2;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: spinEnhanced 0.7s linear infinite reverse;
+}
+
+@keyframes spinEnhanced {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Ocultar contenido hasta que el JS lo muestre */
+body.loaded #loader {
+    display: none;
+    animation: fadeOutLoader 0.3s ease-out;
+}
+
+@keyframes fadeOutLoader {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+body:not(.loaded) .container,
+body:not(.loaded) .home-button,
+body:not(.loaded) .if-container {
+    display: none !important;
 }
 
 /* ------------------------- */
