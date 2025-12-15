@@ -10,10 +10,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 // Función para obtener el periodo del día
 function getPeriodOfDay() {
   const hour = new Date().getHours();
+  console.log('Hora actual: ', hour);
   
-  if (hour >= 5 && hour < 12) {
+  if (hour >= 4 && hour < 12) {
     return 'morning';
-  } else if (hour >= 12 && hour < 19) {
+  } else if (hour >= 12 && hour < 18) {
     return 'afternoon';
   } else {
     return 'night';
@@ -24,9 +25,9 @@ function getPeriodOfDay() {
 function getGreeting() {
   const hour = new Date().getHours();
   
-  if (hour >= 5 && hour < 12) {
+  if (hour >= 4 && hour < 12) {
     return 'Buenos días';
-  } else if (hour >= 12 && hour < 19) {
+  } else if (hour >= 12 && hour < 18) {
     return 'Buenas tardes';
   } else {
     return 'Buenas noches';
@@ -109,8 +110,8 @@ async function checkAuthAndRole() {
     case 2: // sucursal
       mostrar([
         'btn-despachoSucursal',
-        'btn-clientes'
-        //'btn-pedidosSucursal'
+        'btn-clientes',
+        'btn-pedidosSucursal'
       ]);
       break;
 
