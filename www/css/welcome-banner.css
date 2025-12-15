@@ -1,0 +1,237 @@
+/* ============================================
+   BANNER DE BIENVENIDA ANIMADO
+   ============================================ */
+
+   .welcome-container {
+    position: relative;
+    text-align: center;
+    padding: 30px 25px;
+    margin: 30px auto;
+    max-width: 650px;
+    background: linear-gradient(135deg, #4aff65, #5effcc, #68ff3a);
+    background-size: 200% 200%;
+    border-radius: 25px;
+    box-shadow: 0 8px 30px rgba(74, 255, 101, 0.3);
+    overflow: hidden;
+    animation: welcomeEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+               bgPulse 8s ease infinite;
+}
+
+/* Animación de entrada con rebote */
+@keyframes welcomeEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    60% {
+        transform: translateY(10px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Animación de pulso en el fondo */
+@keyframes bgPulse {
+    0%, 100% {
+        background-position: 0% 50%;
+        box-shadow: 0 8px 30px rgba(74, 255, 101, 0.3);
+    }
+    50% {
+        background-position: 100% 50%;
+        box-shadow: 0 12px 40px rgba(94, 255, 204, 0.5);
+    }
+}
+
+/* Efecto de brillo animado */
+.welcome-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+    );
+    animation: shine 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+/* Partículas decorativas */
+.welcome-container::after {
+    content: '✨';
+    position: absolute;
+    font-size: 20px;
+    top: 10px;
+    right: 20px;
+    animation: float 3s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(10deg);
+    }
+}
+
+/* Texto de saludo principal */
+.welcome-greeting {
+    color: #1a1a1a;
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+    animation: textPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes textPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Efecto de onda en el texto */
+.welcome-greeting span {
+    display: inline-block;
+    animation: wave 1.5s ease-in-out infinite;
+}
+
+.welcome-greeting span:nth-child(1) { animation-delay: 0s; }
+.welcome-greeting span:nth-child(2) { animation-delay: 0.1s; }
+.welcome-greeting span:nth-child(3) { animation-delay: 0.2s; }
+.welcome-greeting span:nth-child(4) { animation-delay: 0.3s; }
+.welcome-greeting span:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes wave {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Mensaje secundario */
+.welcome-message {
+    color: #2d2d2d;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+    font-style: italic;
+    animation: fadeInUp 0.8s ease 0.5s backwards;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efecto hover interactivo */
+.welcome-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 45px rgba(74, 255, 101, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* Bordes decorativos animados */
+.welcome-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 25px;
+    padding: 3px;
+    background: linear-gradient(45deg, 
+        transparent,
+        rgba(255, 255, 255, 0.5),
+        transparent
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateBorder 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotateBorder {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .welcome-container {
+        margin: 20px 15px;
+        padding: 25px 20px;
+        max-width: calc(100% - 30px);
+    }
+    
+    .welcome-greeting {
+        font-size: 26px;
+    }
+    
+    .welcome-message {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-container {
+        padding: 20px 15px;
+    }
+    
+    .welcome-greeting {
+        font-size: 22px;
+    }
+    
+    .welcome-message {
+        font-size: 14px;
+    }
+    
+    .welcome-container::after {
+        font-size: 16px;
+        top: 8px;
+        right: 15px;
+    }
+}
