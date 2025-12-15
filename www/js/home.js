@@ -51,7 +51,8 @@ async function checkAuthAndRole() {
         'btn-clientes',
         'btn-congelacion',
         'btn-inventario-No-Controlado',
-        'btn-pedidosProduccion'
+        'btn-pedidosProduccion',
+        'btn-usuario'
       ]);
       break;
 
