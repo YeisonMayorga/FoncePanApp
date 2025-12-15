@@ -19,6 +19,12 @@ $(document).ready(async function () {
         width: '100%',
         dropdownParent: $('#modalEntradaSalida') // Esto es importante para modales
     });
+    $('#umSelect').select2({
+        placeholder: "Selecciona un producto",
+        language: "es",
+        width: '100%',
+        dropdownParent: $('#modalFormulario') // Esto es importante para modales
+    });
 
     async function checkAuthAndRole() {
     const { data: { session } } = await supabase.auth.getSession();
