@@ -1,10 +1,57 @@
 import {supabase} from '../backend/supabase/supabaseCliente.js';
+import {welcomeMessages} from '../backend/listas/mensajesBienvenida.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
   // Evita que se muestre la página antes de tiempo
   document.body.classList.remove('loaded');
   await checkAuthAndRole();
 });
+
+// Función para obtener el periodo del día
+function getPeriodOfDay() {
+  const hour = new Date().getHours();
+  
+  if (hour >= 5 && hour < 12) {
+    return 'morning';
+  } else if (hour >= 12 && hour < 19) {
+    return 'afternoon';
+  } else {
+    return 'night';
+  }
+}
+
+// Función para obtener saludo según la hora
+function getGreeting() {
+  const hour = new Date().getHours();
+  
+  if (hour >= 5 && hour < 12) {
+    return 'Buenos días';
+  } else if (hour >= 12 && hour < 19) {
+    return 'Buenas tardes';
+  } else {
+    return 'Buenas noches';
+  }
+}
+
+// Función para obtener mensaje aleatorio según la hora
+function getRandomMessage() {
+  const period = getPeriodOfDay();
+  const messages = welcomeMessages[period];
+  const randomIndex = Math.floor(Math.random() * messages.length);
+  return messages[randomIndex];
+}
+
+// Función para mostrar el mensaje de bienvenida
+function displayWelcomeMessage(userName) {
+  const greetingElement = document.getElementById('welcome-greeting');
+  const messageElement = document.getElementById('welcome-message');
+  
+  const greeting = getGreeting();
+  const randomMessage = getRandomMessage();
+  
+  greetingElement.textContent = `${greeting}, ${userName}`;
+  messageElement.textContent = randomMessage;
+}
 
 async function checkAuthAndRole() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -19,7 +66,7 @@ async function checkAuthAndRole() {
   const { data: user, error } = await supabase
     .schema('inventario')
     .from('usuarios')
-    .select('id_rol')
+    .select('id_rol, nombre_usuario')
     .eq('id', userId)
     .single();
 
@@ -29,6 +76,8 @@ async function checkAuthAndRole() {
     return;
   }
 
+  // Mostrar mensaje de bienvenida
+  displayWelcomeMessage(user.nombre_usuario);
   
   // ✅ Oculta el loader y muestra el contenedor principal
   setTimeout(() => {
@@ -37,7 +86,8 @@ async function checkAuthAndRole() {
   document.getElementById('app-content').style.display = 'block';
   document.getElementById('logout-btn').style.display = 'block';
 
-  console.log('Rol del usuario',user.id_rol)
+  console.log('Rol del usuario',user.id_rol);
+  console.log('Nombre del usuario',user.nombre_usuario);
   // 🎯 Mostrar según el rol
   switch (user.id_rol) {
     case 1: // admin
@@ -93,6 +143,7 @@ function mostrar(ids) {
     if (el) el.style.display = 'flex'; // <-- IMPORTANTE
   });
 }
+
 function mostrarSoloHabilitados(idsHabilitados) {
 
   // 1️⃣ Lista de todos los botones que existen

@@ -347,3 +347,63 @@ body:not(.loaded) .if-container {
         height: 70px;
     }
 }
+
+
+/* Estilos para el contenedor de bienvenida */
+.welcome-container {
+    text-align: center;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcome-greeting {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .welcome-message {
+    color: #f0f0f0;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+    font-style: italic;
+  }
+  
+  /* Animación de entrada */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .welcome-container {
+    animation: fadeInDown 0.6s ease-out;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .welcome-container {
+      margin: 15px;
+      padding: 15px;
+    }
+    
+    .welcome-greeting {
+      font-size: 22px;
+    }
+    
+    .welcome-message {
+      font-size: 14px;
+    }
+  }
