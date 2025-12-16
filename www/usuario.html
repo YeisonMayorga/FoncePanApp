@@ -1,199 +1,210 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
-        <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">            
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/select2-custom.css">
-        <link rel="stylesheet" href="css/inventario-frio.css">
-        <title>Usuarios</title>
-    </head>
 
-    <body>
-        <!-- Loader global -->
-        <div id="loader" class="loader-overlay">
-            <div class="loader-content">
-                <div class="spinner"></div>
-                <p>Cargando...</p>
+<head>
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/select2-custom.css">
+    <link rel="stylesheet" href="css/inventario-frio.css">
+    <title>Usuarios</title>
+</head>
+
+<body>
+    <!-- Loader global -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+    </div>
+    <a href="home.html" class="home-button">
+        <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
+    </a>
+
+    <main class="if-container">
+        <header class="if-header">
+            <h1>
+                <i class="fa fa-users"></i>
+                <span>Usuarios</span>
+            </h1>
+        </header>
+
+        <section class="if-actions-section">
+            <div class="if-actions-grid">
+                <button id="btnAgregar" class="if-btn if-btn-success" aria-label="Agregar nuevo">
+                    <i class="fa fa-plus"></i>
+                    <span>Agregar Nuevo</span>
+                </button>
             </div>
-        </div>            
-        <a href="home.html" class="home-button">
-            <i class="fa fa-home"></i> <!-- Icono de Font Awesome -->
-        </a>
+        </section>
 
-        <main class="if-container">
-            <header class="if-header">
-                <h1>
-                    <i class="fa fa-users"></i>
-                    <span>Usuarios</span>
-                </h1>
-            </header>
+        <section class="if-table-card">
+            <div class="if-skeleton-container">
+                <div class="if-skeleton-header">
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                </div>
+                <div class="if-skeleton-row">
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                </div>
+                <div class="if-skeleton-row">
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                </div>
+                <div class="if-skeleton-row">
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                </div>
+                <div class="if-skeleton-row">
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                    <div class="if-skeleton-cell"></div>
+                </div>
+            </div>
+            <div class="if-table-wrapper">
+                <table id="tablaProductos" class="table table-striped">
+                    <thead>
+                        <tr>
 
-            <section class="if-actions-section">
-                <div class="if-actions-grid">
-                    <button id="btnAgregar" class="if-btn if-btn-success" aria-label="Agregar nuevo">
-                        <i class="fa fa-plus"></i>
-                        <span>Agregar Nuevo</span>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se cargarán los datos dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Agregar/Editar Producto -->
+    <div class="modal fade if-modal" id="modalFormulario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">
+                        <i class="fa fa-edit"></i>
+                        <span>Agregar/Editar Registro</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario">
+                        <input type="hidden" id="id">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">
+                                <i class="fa fa-user"></i>
+                                UserName:
+                            </label>
+                            <input type="text" class="form-control" id="username" required
+                                placeholder="Ingrese el UserName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">
+                                <i class="fa fa-user-o"></i>
+                                Nombre:
+                            </label>
+                            <input type="text" class="form-control" id="nombre" required
+                                placeholder="Ingrese el nombre del usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="umSelect" class="form-label">
+                                <i class="fa fa-user-secret"></i>
+                                Rol:
+                            </label>
+                            <select class="form-control" id="umSelect" required>
+                                <option value="">Selecciona un Rol</option>
+                                <!-- Se llenará dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="mb-3" id="containerSucursal" style="display: none;">
+                            <label for="und_producto" class="form-label">
+                                <i class="fa fa-building"></i>
+                                Sucursal:
+                            </label>
+                            <select class="form-control" id="sucursalSelect">
+                                <option value="">Selecciona una Sucursal</option>
+                                <!-- Se llenará dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fa fa-key"></i>
+                                Password:
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password"
+                                    placeholder="Ingrese la contraseña">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fa fa-times"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación para Eliminar -->
+    <div class="modal fade if-modal" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmarLabel">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <span>Confirmar Eliminación</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">
+                        <i class="fa fa-question-circle text-warning"></i>
+                        ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
+                        <i class="fa fa-trash"></i> Eliminar
                     </button>
                 </div>
-            </section>
-
-            <section class="if-table-card">
-                <div class="if-skeleton-container">
-                    <div class="if-skeleton-header">
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                    </div>
-                    <div class="if-skeleton-row">
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                    </div>
-                    <div class="if-skeleton-row">
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                    </div>
-                    <div class="if-skeleton-row">
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                    </div>
-                    <div class="if-skeleton-row">
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                        <div class="if-skeleton-cell"></div>
-                    </div>
-                </div>
-                <div class="if-table-wrapper">
-                    <table id="tablaProductos" class="table table-striped">
-                        <thead>
-                            <tr>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Aquí se cargarán los datos dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-        
-        <!-- Modal para Agregar/Editar Producto -->
-        <div class="modal fade if-modal" id="modalFormulario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">
-                            <i class="fa fa-edit"></i>
-                            <span>Agregar/Editar Registro</span>
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="formulario">
-                            <input type="hidden" id="id">
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">
-                                    <i class="fa fa-user"></i>
-                                    UserName:
-                                </label>
-                                <input type="text" class="form-control" id="username" required placeholder="Ingrese el UserName">
-                            </div>
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">
-                                    <i class="fa fa-user-o"></i>
-                                    Nombre:
-                                </label>
-                                <input type="text" class="form-control" id="nombre" required placeholder="Ingrese el nombre del usuario">
-                            </div>
-                            <div class="mb-3">
-                                <label for="umSelect" class="form-label">
-                                    <i class="fa fa-user-secret"></i>
-                                    Rol:
-                                </label>
-                                <select class="form-control" id="umSelect" required>
-                                    <option value="">Selecciona un Rol</option>
-                                    <!-- Se llenará dinámicamente -->
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="und_producto" class="form-label">
-                                    <i class="fa fa-building"></i>
-                                    Sucursal:
-                                </label>
-                                <select class="form-control" id="sucursalSelect" required>
-                                    <option value="">Selecciona una Sucursal</option>
-                                    <!-- Se llenará dinámicamente -->
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">
-                                    <i class="fa fa-key"></i>
-                                    Password:
-                                </label>
-                                <input type="password" class="form-control" id="password" required placeholder="Ingrese la contraseña">
-                            </div>                            
-                            <div class="d-flex gap-2 justify-content-end">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <i class="fa fa-times"></i> Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
-        
-        <!-- Modal de Confirmación para Eliminar -->
-        <div class="modal fade if-modal" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmarLabel">
-                            <i class="fa fa-exclamation-triangle"></i>
-                            <span>Confirmar Eliminación</span>
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-0">
-                            <i class="fa fa-question-circle text-warning"></i>
-                            ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fa fa-times"></i> Cancelar
-                        </button>
-                        <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
-                            <i class="fa fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 
 
-    
-        <script src="cordova.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
-        <script type="module" src="js/usuario.js"></script>
-    </body>
+
+    <script src="cordova.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/es.js"></script>
+    <script type="module" src="js/usuario.js"></script>
+</body>
+
 </html>
