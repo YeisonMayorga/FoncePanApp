@@ -330,10 +330,9 @@ async function cargarTablasProductos() {
         </tr>
         `);
     });
-        </tr >
-        `);
-    });
-    
+
+
+
     // Re-aplicar filtro si existe
     const filtroActual = $('#buscadorProductos').val();
     if (filtroActual) {
@@ -341,11 +340,11 @@ async function cargarTablasProductos() {
     }
 }
 // 🔍 Filtrado global para las 3 tablas
-$(document).on('input', '#buscadorProductos', function() {
+$(document).on('input', '#buscadorProductos', function () {
     const texto = $(this).val().toLowerCase();
     // Filtra todas las filas de las 3 tablas
     ['#tablaProductosSolicitud1', '#tablaProductosSolicitud2', '#tablaProductosSolicitud3'].forEach(id => {
-        $(`${ id } tbody tr`).each(function() {
+        $(`${id} tbody tr`).each(function () {
             const fila = $(this);
             const textoFila = fila.text().toLowerCase();
             fila.toggle(textoFila.includes(texto));
@@ -385,16 +384,16 @@ $(document).ready(async () => {
 });
 import { obtenerNotificaciones, marcarNotificacionVista } from './app.js';
 supabase
-.channel('notificaciones_updates') // Nombre del canal, puede ser cualquier string
-.on(
-    'postgres_changes',
-    { event: '*', schema: 'inventario', table: 'notificaciones' },
-    (payload) => {
-        console.log('Cambio detectado en notificaciones:', payload);
-        cargarNotificaciones(); // Refresca la tabla sin recargar la página
-    }
-)
-.subscribe();
+    .channel('notificaciones_updates') // Nombre del canal, puede ser cualquier string
+    .on(
+        'postgres_changes',
+        { event: '*', schema: 'inventario', table: 'notificaciones' },
+        (payload) => {
+            console.log('Cambio detectado en notificaciones:', payload);
+            cargarNotificaciones(); // Refresca la tabla sin recargar la página
+        }
+    )
+    .subscribe();
 async function cargarNotificaciones() {
     const notificaciones = await obtenerNotificaciones();
     const lista = document.getElementById('listaNotificaciones');
@@ -403,13 +402,13 @@ async function cargarNotificaciones() {
     notificaciones.forEach(n => {
         if (!n.visto) noLeidas++;
         const li = document.createElement('li');
-        li.className = `list - group - item d - flex justify - content - between align - items - start ${ n.visto ? '' : 'fw-bold' } `;
+        li.className = `list - group - item d - flex justify - content - between align - items - start ${n.visto ? '' : 'fw-bold'} `;
         li.innerHTML = `
         < div class="ms-2 me-auto" >
-            ${ n.mensaje } <br>
+            ${n.mensaje} <br>
                 <small class="text-muted">${new Date(n.fecha).toLocaleString('es-CO', { hour12: true, hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</small>
             </div>
-        ${ n.id_despacho ? `<button class="btn btn-sm btn-link ver-despacho" data-id="${n.id_despacho}" data-noti="${n.id_notificacion}">Ver</button>` : '' }
+        ${n.id_despacho ? `<button class="btn btn-sm btn-link ver-despacho" data-id="${n.id_despacho}" data-noti="${n.id_notificacion}">Ver</button>` : ''}
     `;
         lista.appendChild(li);
     });
@@ -439,7 +438,7 @@ $('#modalNotificaciones').on('show.bs.modal', () => {
 });
 // Carga inicial al cargar página
 cargarNotificaciones();
-$('#btnDevoluciones').on('click', function() {
+$('#btnDevoluciones').on('click', function () {
     // Obtenemos el despachoId almacenado en el botón
     const despachoId = $(this).data('despacho-id');
     if (despachoId) {
@@ -502,9 +501,9 @@ document.getElementById('formDevolucion').addEventListener('submit', async funct
         .schema('inventario')
         .from('devoluciones')
         .insert({
-        id_despacho: despachoId,
-        id_sucursal: despachoData.id_sucursal,
-        observaciones
+            id_despacho: despachoId,
+            id_sucursal: despachoData.id_sucursal,
+            observaciones
         })
         .select()
         .single();
@@ -512,9 +511,9 @@ document.getElementById('formDevolucion').addEventListener('submit', async funct
     // Insertar detalles
     for (let p of productos) {
         await supabase.schema('inventario').from('detalle_devolucion').insert({
-        id_devolucion: devolucion.id_devolucion,
-        id_producto: p.id_producto,
-        cantidad_devuelta: p.cantidad_devuelta
+            id_devolucion: devolucion.id_devolucion,
+            id_producto: p.id_producto,
+            cantidad_devuelta: p.cantidad_devuelta
         });
     }
     alert("Devolución registrada correctamente.");
