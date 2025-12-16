@@ -137,7 +137,23 @@ $(document).ready(async () => {
         columns: [
             { data: 'id_despacho' },
             { data: 'nombre_sucursal' },
-            { data: 'fecha_solicitud_formateada' },
+            {
+                data: 'fecha_solicitud',
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        const fecha = new Date(data);
+                        return fecha.toLocaleString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                    }
+                    return data;
+                }
+            },
             {
                 data: 'estado',
                 render: function (data) {
