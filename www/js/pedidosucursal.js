@@ -107,7 +107,23 @@ $(document).ready(async () => {
         order: [[1, 'desc']],
         columns: [
             { data: 'id_despacho' },
-            { data: 'fecha_solicitud_formateada' },
+            {
+                data: 'fecha_solicitud',
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        const fecha = new Date(data);
+                        return fecha.toLocaleString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                    }
+                    return data;
+                }
+            },
             {
                 data: 'estado',
                 render: function (data) {
@@ -217,9 +233,11 @@ $(document).ready(async () => {
                             type="number" 
                             class="form-control form-control-sm recibido" 
                             data-id="${p.id_detalle_despacho}" 
+                            data-enviado="${p.cantidad_enviada ?? 0}"
                             value="${p.cantidad_recibida ?? 0}" 
                             ${['pendiente', 'recibido', 'finalizado'].includes(estadoDespachoActual) ? 'disabled' : ''}
                             >
+                            <div class="invalid-feedback d-none"></div>
                         </td>
                     </tr>
                 `);
@@ -232,6 +250,25 @@ $(document).ready(async () => {
         $('#btnDevoluciones').toggle(estadoDespachoActual === 'finalizado' && !yaExisteDevolucion);
         const modal = new bootstrap.Modal(document.getElementById('modalDetalleSucursal'));
         modal.show();
+
+        // Validación en tiempo real para recepción
+        $('.recibido').off('input').on('input', function () {
+            const input = $(this);
+            const valor = parseInt(input.val());
+            const enviado = parseInt(input.data('enviado'));
+            const feedback = input.next('.invalid-feedback');
+
+            if (isNaN(valor) || valor < 0) {
+                input.addClass('is-invalid');
+                feedback.text('Debe ser mayor o igual a 0').removeClass('d-none');
+            } else if (valor > enviado) {
+                input.addClass('is-invalid');
+                feedback.text(`No puedes recibir más de lo enviado (${enviado})`).removeClass('d-none');
+            } else {
+                input.removeClass('is-invalid');
+                feedback.addClass('d-none');
+            }
+        });
     }
     async function existeDevolucion(despachoId) {
         try {
@@ -253,13 +290,32 @@ $(document).ready(async () => {
     }
     $('#btnConfirmarRecepcion').click(async () => {
         const inputs = document.querySelectorAll('.recibido');
+        let hayError = false;
         const actualizaciones = [];
         inputs.forEach(input => {
+            const valor = parseInt(input.value);
+            const enviado = parseInt(input.dataset.enviado);
+
+            if (input.classList.contains('is-invalid') || valor > enviado || valor < 0) {
+                hayError = true;
+                input.classList.add('is-invalid'); // Asegurar visualización del error
+                const feedback = input.nextElementSibling;
+                if (feedback) {
+                    feedback.textContent = valor > enviado ? `No puedes recibir más de lo enviado (${enviado})` : 'Debe ser mayor o igual a 0';
+                    feedback.classList.remove('d-none');
+                }
+            }
+
             actualizaciones.push({
                 id_detalle: input.dataset.id,
-                cantidad_recibida: parseInt(input.value)
+                cantidad_recibida: valor
             });
         });
+
+        if (hayError) {
+            alert('Hay errores en las cantidades recibidas. Por favor verifique.');
+            return;
+        }
         for (const item of actualizaciones) {
             await confirmarRecepcion(item.id_detalle, item.cantidad_recibida);
         }
@@ -299,7 +355,8 @@ async function cargarTablasProductos() {
             <td>${p.nombre_um}</td>
             <td>${p.und_producto}</td>
             <td>
-            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" min="0" value="0">
+            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
+            <div class="invalid-feedback d-none"></div>
             </td>
         </tr>
         `);
@@ -312,7 +369,8 @@ async function cargarTablasProductos() {
             <td>${p.nombre_um}</td>
             <td>${p.und_producto}</td>
             <td>
-            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" min="0" value="0">
+            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
+            <div class="invalid-feedback d-none"></div>
             </td>
         </tr>
         `);
@@ -325,11 +383,13 @@ async function cargarTablasProductos() {
             <td>${p.nombre_um}</td>
             <td>${p.und_producto}</td>
             <td>
-            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" min="0" value="0">
+            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
+            <div class="invalid-feedback d-none"></div>
             </td>
         </tr>
         `);
     });
+
 
 
     // Re-aplicar filtro si existe
@@ -337,6 +397,25 @@ async function cargarTablasProductos() {
     if (filtroActual) {
         $('#buscadorProductos').trigger('input');
     }
+
+    // Validación delegaada para solicitudes
+    $(document).off('input', '.cantidad-solicitada').on('input', '.cantidad-solicitada', function () {
+        const input = $(this);
+        const valor = parseInt(input.val());
+        const stock = parseInt(input.data('stock'));
+        const feedback = input.next('.invalid-feedback');
+
+        if (isNaN(valor) || valor < 0) {
+            input.addClass('is-invalid');
+            feedback.text('Min 0').removeClass('d-none');
+        } else if (valor > stock) {
+            input.addClass('is-invalid');
+            feedback.text(`Max ${stock}`).removeClass('d-none');
+        } else {
+            input.removeClass('is-invalid');
+            feedback.addClass('d-none');
+        }
+    });
 }
 // 🔍 Filtrado global para las 3 tablas
 $(document).on('input', '#buscadorProductos', function () {
@@ -357,8 +436,16 @@ $(document).ready(async () => {
     $('#btnEnviarSolicitud').click(async () => {
         const cantidades = document.querySelectorAll('.cantidad-solicitada');
         const productosSolicitados = [];
+        let hayError = false;
         cantidades.forEach(input => {
             const cantidad = parseInt(input.value);
+            const stock = parseInt(input.dataset.stock);
+
+            if (input.classList.contains('is-invalid') || cantidad > stock) {
+                hayError = true;
+                return;
+            }
+
             if (cantidad > 0) {
                 productosSolicitados.push({
                     id_producto: input.dataset.id,
@@ -366,6 +453,11 @@ $(document).ready(async () => {
                 });
             }
         });
+
+        if (hayError) {
+            alert('Hay productos solicitados que exceden el stock disponible o son inválidos.');
+            return;
+        }
         if (productosSolicitados.length === 0) {
             alert('Debes seleccionar al menos un producto con cantidad mayor a 0.');
             return;
@@ -403,7 +495,7 @@ async function cargarNotificaciones() {
         const li = document.createElement('li');
         li.className = `list - group - item d - flex justify - content - between align - items - start ${n.visto ? '' : 'fw-bold'} `;
         li.innerHTML = `
-        < div class="ms-2 me-auto" >
+            <div class="ms-2 me-auto">
             ${n.mensaje} <br>
                 <small class="text-muted">${new Date(n.fecha).toLocaleString('es-CO', { hour12: true, hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</small>
             </div>
