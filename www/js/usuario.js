@@ -17,7 +17,7 @@ $(document).ready(async function () {
     //Función para cargar datos en la tabla
     // Umbrales iniciales (pueden ser editados por el usuario)
     $('#umSelect').select2({
-        placeholder: "Selecciona un producto",
+        placeholder: "Selecciona un Rol",
         language: "es",
         width: '100%',
         dropdownParent: $('#modalFormulario') // Esto es importante para modales
@@ -38,7 +38,7 @@ $(document).ready(async function () {
 
     $('#umSelect').on('change', toggleSucursal);
     $('#sucursalSelect').select2({
-        placeholder: "Selecciona un producto",
+        placeholder: "Selecciona una Sucursal",
         language: "es",
         width: '100%',
         dropdownParent: $('#modalFormulario') // Esto es importante para modales

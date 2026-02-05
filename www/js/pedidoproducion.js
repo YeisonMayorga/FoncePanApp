@@ -1,8 +1,7 @@
-import { eliminarDespacho } from '../backend/endpoints/despachoBackend.js';
-import { obtenerDespachosAdmin, obtenerDetalleDespacho, actualizarEstadoDespacho, supabase, obtenerEstadoDespacho } from './app.js';
-let idDespachoSeleccionado = null;
-let estadoDespachoActual = null;
-let devoluciones = [];
+import { obtenerPedidoAdmin } from '../backend/endpoints/pedidoBackend.js';
+import { supabase } from '../backend/supabase/supabaseCliente.js';
+
+
 $(document).ready(async () => {
     // Evita que se muestre la página antes de tiempo
     document.body.classList.remove('loaded');
@@ -33,87 +32,30 @@ $(document).ready(async () => {
         return user.id_rol;  // ✅ Retorna el id_rol directamente
     }
     const mostrarAcciones = rolUsuario === 1 || rolUsuario === 4;
-    await cargarDevoluciones();
-    // Cargar todas las devoluciones al inicializar la página
-    async function cargarDevoluciones() {
-        const { data, error } = await supabase
-            .schema('inventario')
-            .from('devoluciones')
-            .select('id_despacho');
 
-        if (!error) devoluciones = data.map(d => d.id_despacho);
-    }
-    // Suscripción a cambios en la tabla 'devoluciones'
-    const channel = supabase
-        .channel('devoluciones_changes')
-        .on('postgres_changes', {
-            event: '*', // Solo para inserciones (ajusta si necesitas UPDATE/DELETE)
-            schema: 'inventario',
-            table: 'devoluciones'
-        }, async (payload) => {
-            console.log('Nueva devolución registrada:', payload.new.id_despacho);
-            // 1. Actualiza el array local
-            if (!devoluciones.includes(payload.new.id_despacho)) {
-                devoluciones.push(payload.new.id_despacho);
-            }
-            // 2. Busca la fila en DataTables y actualiza SU columna de acciones
-            const tabla = $('#tablaDespachosAdmin').DataTable();
-            const filas = tabla.rows().nodes();
-
-            $(filas).each(function () {
-                const rowId = $(this).find('.ver-detalle').data('id');
-                if (rowId === payload.new.id_despacho) {
-                    const nuevoBoton = `
-            <button class="btn btn-warning btn-sm btn-devolver" 
-                    data-id="${payload.new.id_despacho}">
-                Ver Devolución
-            </button>
-            `;
-                    // Actualiza solo la celda de acciones (última celda)
-                    $(this).find('td:last').html(`
-            <button class="btn btn-primary btn-sm ver-detalle" 
-                    data-id="${rowId}" 
-                    data-estado="${$(this).find('.ver-detalle').data('estado')}">
-                Ver
-            </button>
-            ${nuevoBoton}
-            `);
-                }
-            });
-        })
-        .subscribe();
-
-    const tabla = $('#tablaDespachosAdmin').DataTable({
+    const tabla = $('#tablaPedidoAdmin').DataTable({
         ajax: async (data, callback) => {
-            const datos = await obtenerDespachosAdmin();
+            const datos = await obtenerPedidoAdmin();
             // Para cada despacho, trae los productos asociados (solo sus nombres)
-            const despachosFormateados = await Promise.all(
+            const pedidosFormateados = await Promise.all(
                 datos.map(async item => {
                     const { data: productos, error } = await supabase
                         .schema('inventario')
                         .from('detalle_despacho')
-                        .select('productosn(nombre_producto)')
-                        .eq('id_despacho', item.id_despacho);
+                        .select('producto(nombre_producto)')
+                        .eq('id_pedido', item.id_pedido);
 
-                    const nombresProductos = productos?.map(p => p.productosn.nombre_producto).join(', ') || '';
-
-                    const fecha = new Date(item.fecha_solicitud);
-                    const fechaFormateada = fecha.toLocaleString("es-CO", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    });
+                    const nombresProductos = productos?.map(p => p.producto.nombre_producto).join(', ') || '';
 
                     return {
                         ...item,
-                        fecha_solicitud_formateada: fechaFormateada,
+                        
                         productos_texto: nombresProductos.toLowerCase() // 🔍 agregamos para búsqueda
                     };
                 })
             );
-            callback({ data: despachosFormateados });
+            callback({ data: pedidosFormateados });
+            console.log('Pedidos formateados',pedidosFormateados)
             // Al final de la carga inicial de la tabla, después del callback
             setTimeout(() => {
                 document.body.classList.add('loaded');
@@ -135,10 +77,28 @@ $(document).ready(async () => {
         },
         order: [[2, 'desc']],
         columns: [
-            { data: 'id_despacho' },
-            { data: 'nombre_sucursal' },
+            { data: 'id_pedido' },
+            { data: 'sucursal_solicitud' },
+            { data: 'sucursal_entrega' },
             {
                 data: 'fecha_solicitud',
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        const fecha = new Date(data);
+                        return fecha.toLocaleString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'fecha_entrega',
                 render: function (data, type, row) {
                     if (type === 'display' || type === 'filter') {
                         const fecha = new Date(data);
@@ -167,22 +127,18 @@ $(document).ready(async () => {
                     return `<span class="badge bg-${color}" style="font-size:0.9em;">${data}</span>`;
                 }
             },
-            { data: 'total_productos' },
-            { data: 'total_solicitado' },
+            { data: 'cliente_nombre' },
+            { data: 'cliente_documento' },
             {
                 data: null,
                 render: (row) => {
-                    const existeDevolucion = devoluciones.includes(row.id_despacho);
-                    const botonDevolver = existeDevolucion
-                        ? `<button class="btn btn-warning btn-sm btn-devolver" data-id="${row.id_despacho}">Ver Devolución</button>`
-                        : '';
                     // 👇 Solo roles 1 o 4 pueden ver este botón
                     const botonEliminar = mostrarAcciones
-                        ? `<button class="btn btn-danger btn-sm btnEliminarDespacho" data-id="${row.id_despacho}">Eliminar</button>`
+                        ? `<button class="btn btn-danger btn-sm btnEliminarDespacho" data-id="${row.id_pedido}">Eliminar</button>`
                         : '';
                     return `
-                    <button class="btn btn-primary btn-sm ver-detalle" data-id="${row.id_despacho}" data-estado="${row.estado}">Ver</button>
-                    ${botonDevolver}
+                    <button class="btn btn-primary btn-sm ver-detalle" data-id="${row.id_pedido}" data-estado="${row.estado}">Ver</button>
+                    
                     ${botonEliminar}
                     `;
                 }
@@ -201,16 +157,22 @@ $(document).ready(async () => {
             const filtro = $('#buscadorProductos').val().toLowerCase().trim();
             if (!filtro) return true;
 
-            const rowData = settings.oApi._fnGetRowData(settings, dataIndex); // Obtener objeto de datos completo
+            // Obtener los datos de la fila usando la API de DataTables
+            const api = new $.fn.dataTable.Api(settings);
+            const rowData = api.row(dataIndex).data();
 
-            // Construir texto general de búsqueda
+            if (!rowData) return true;
+
+            // Construir texto general de búsqueda desde los datos visibles
             const textoGeneral = Object.values(rowData)
-                .filter(v => v != null)
+                .filter(v => v != null && typeof v !== 'object' && typeof v !== 'function')
                 .join(' ')
                 .toLowerCase();
 
+            // Obtener productos_texto si existe (este campo contiene los nombres de productos de detalle_despacho)
             const productosTexto = (rowData.productos_texto || '').toLowerCase();
 
+            // Buscar en el texto general (sucursal, fecha, estado, etc.) o en los productos
             return textoGeneral.includes(filtro) || productosTexto.includes(filtro);
         }
     );
@@ -233,21 +195,33 @@ $(document).ready(async () => {
         .subscribe();
     async function actualizarTabla() {
         const productos = await obtenerDespachosAdmin(); // Obtiene datos actualizados
-        const despachosFormateados = productos.map(item => {
-            const fecha = new Date(item.fecha_solicitud);
-            const fechaFormateada = fecha.toLocaleString("es-CO", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            });
+        // Para cada despacho, trae los productos asociados (solo sus nombres)
+        const despachosFormateados = await Promise.all(
+            productos.map(async item => {
+                const { data: productosDetalle, error } = await supabase
+                    .schema('inventario')
+                    .from('detalle_despacho')
+                    .select('productosn(nombre_producto)')
+                    .eq('id_despacho', item.id_despacho);
 
-            return {
-                ...item,
-                fecha_solicitud_formateada: fechaFormateada
-            };
-        });
+                const nombresProductos = productosDetalle?.map(p => p.productosn.nombre_producto).join(', ') || '';
+
+                const fecha = new Date(item.fecha_solicitud);
+                const fechaFormateada = fecha.toLocaleString("es-CO", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+                return {
+                    ...item,
+                    fecha_solicitud_formateada: fechaFormateada,
+                    productos_texto: nombresProductos.toLowerCase() // 🔍 agregamos para búsqueda
+                };
+            })
+        );
         tabla.clear().rows.add(despachosFormateados).draw(); // Reescribe los datos en la tabla
     }
 

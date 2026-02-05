@@ -433,43 +433,82 @@ $(document).on('input', '#buscadorProductos', function () {
 
 $(document).ready(async () => {
     await cargarTablasProductos();
+    let enviandoSolicitud = false; // Bandera para prevenir múltiples clics
+    
     $('#btnEnviarSolicitud').click(async () => {
-        const cantidades = document.querySelectorAll('.cantidad-solicitada');
-        const productosSolicitados = [];
-        let hayError = false;
-        cantidades.forEach(input => {
-            const cantidad = parseInt(input.value);
-            const stock = parseInt(input.dataset.stock);
+        // Prevenir múltiples clics
+        if (enviandoSolicitud) {
+            return;
+        }
 
-            if (input.classList.contains('is-invalid') || cantidad > stock) {
-                hayError = true;
+        const btn = $('#btnEnviarSolicitud');
+        const textoOriginal = btn.html();
+        
+        // Deshabilitar botón y mostrar indicador de carga
+        enviandoSolicitud = true;
+        btn.prop('disabled', true);
+        btn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...');
+
+        try {
+            const cantidades = document.querySelectorAll('.cantidad-solicitada');
+            const productosSolicitados = [];
+            let hayError = false;
+            cantidades.forEach(input => {
+                const cantidad = parseInt(input.value);
+                const stock = parseInt(input.dataset.stock);
+
+                if (input.classList.contains('is-invalid') || cantidad > stock) {
+                    hayError = true;
+                    return;
+                }
+
+                if (cantidad > 0) {
+                    productosSolicitados.push({
+                        id_producto: input.dataset.id,
+                        cantidad
+                    });
+                }
+            });
+
+            if (hayError) {
+                alert('Hay productos solicitados que exceden el stock disponible o son inválidos.');
+                // Rehabilitar botón y restaurar texto original
+                enviandoSolicitud = false;
+                btn.prop('disabled', false);
+                btn.html(textoOriginal);
                 return;
             }
-
-            if (cantidad > 0) {
-                productosSolicitados.push({
-                    id_producto: input.dataset.id,
-                    cantidad
-                });
+            if (productosSolicitados.length === 0) {
+                alert('Debes seleccionar al menos un producto con cantidad mayor a 0.');
+                // Rehabilitar botón y restaurar texto original
+                enviandoSolicitud = false;
+                btn.prop('disabled', false);
+                btn.html(textoOriginal);
+                return;
             }
-        });
-
-        if (hayError) {
-            alert('Hay productos solicitados que exceden el stock disponible o son inválidos.');
-            return;
-        }
-        if (productosSolicitados.length === 0) {
-            alert('Debes seleccionar al menos un producto con cantidad mayor a 0.');
-            return;
-        }
-        const exito = await crearDespachoConDetalles(productosSolicitados);
-        if (exito) {
-            alert('Solicitud enviada correctamente.');
-            $('#modalNuevaSolicitud').modal('hide');
-            $('.modal-backdrop').remove(); // Elimina el fondo gris
-            $('body').removeClass('modal-open'); // Restaura el scroll
-        } else {
+            
+            const exito = await crearDespachoConDetalles(productosSolicitados);
+            if (exito) {
+                alert('Solicitud enviada correctamente.');
+                $('#modalNuevaSolicitud').modal('hide');
+                $('.modal-backdrop').remove(); // Elimina el fondo gris
+                $('body').removeClass('modal-open'); // Restaura el scroll
+                
+                // Limpiar los campos después de enviar exitosamente
+                cantidades.forEach(input => {
+                    input.value = 0;
+                });
+            } else {
+                alert('Error al enviar la solicitud.');
+            }
+        } catch (error) {
+            console.error('Error al enviar solicitud:', error);
             alert('Error al enviar la solicitud.');
+        } finally {
+            // Rehabilitar botón y restaurar texto original
+            enviandoSolicitud = false;
+            btn.prop('disabled', false);
+            btn.html(textoOriginal);
         }
     });
 });

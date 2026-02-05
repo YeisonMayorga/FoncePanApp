@@ -201,16 +201,22 @@ $(document).ready(async () => {
             const filtro = $('#buscadorProductos').val().toLowerCase().trim();
             if (!filtro) return true;
 
-            const rowData = settings.oApi._fnGetRowData(settings, dataIndex); // Obtener objeto de datos completo
+            // Obtener los datos de la fila usando la API de DataTables
+            const api = new $.fn.dataTable.Api(settings);
+            const rowData = api.row(dataIndex).data();
 
-            // Construir texto general de búsqueda
+            if (!rowData) return true;
+
+            // Construir texto general de búsqueda desde los datos visibles
             const textoGeneral = Object.values(rowData)
-                .filter(v => v != null)
+                .filter(v => v != null && typeof v !== 'object' && typeof v !== 'function')
                 .join(' ')
                 .toLowerCase();
 
+            // Obtener productos_texto si existe (este campo contiene los nombres de productos de detalle_despacho)
             const productosTexto = (rowData.productos_texto || '').toLowerCase();
 
+            // Buscar en el texto general (sucursal, fecha, estado, etc.) o en los productos
             return textoGeneral.includes(filtro) || productosTexto.includes(filtro);
         }
     );
@@ -233,21 +239,33 @@ $(document).ready(async () => {
         .subscribe();
     async function actualizarTabla() {
         const productos = await obtenerDespachosAdmin(); // Obtiene datos actualizados
-        const despachosFormateados = productos.map(item => {
-            const fecha = new Date(item.fecha_solicitud);
-            const fechaFormateada = fecha.toLocaleString("es-CO", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            });
+        // Para cada despacho, trae los productos asociados (solo sus nombres)
+        const despachosFormateados = await Promise.all(
+            productos.map(async item => {
+                const { data: productosDetalle, error } = await supabase
+                    .schema('inventario')
+                    .from('detalle_despacho')
+                    .select('productosn(nombre_producto)')
+                    .eq('id_despacho', item.id_despacho);
 
-            return {
-                ...item,
-                fecha_solicitud_formateada: fechaFormateada
-            };
-        });
+                const nombresProductos = productosDetalle?.map(p => p.productosn.nombre_producto).join(', ') || '';
+
+                const fecha = new Date(item.fecha_solicitud);
+                const fechaFormateada = fecha.toLocaleString("es-CO", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+                return {
+                    ...item,
+                    fecha_solicitud_formateada: fechaFormateada,
+                    productos_texto: nombresProductos.toLowerCase() // 🔍 agregamos para búsqueda
+                };
+            })
+        );
         tabla.clear().rows.add(despachosFormateados).draw(); // Reescribe los datos en la tabla
     }
 

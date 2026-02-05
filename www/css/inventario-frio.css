@@ -321,82 +321,96 @@ body:not(.loaded) .if-container {
     margin-top: 20px;
 }
 
+.dataTables_filter {
+    margin-bottom: 15px;
+}
+
 .dataTables_filter label {
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    align-items: center !important;
     gap: 10px;
     font-weight: 500;
+    margin-bottom: 0;
 }
 
-.dataTables_filter input {
-    padding: 8px 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    transition: var(--if-transition);
-    margin-left: 10px;
+.dataTables_filter input[type="search"] {
+    padding: 8px 15px !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 6px !important;
+    transition: var(--if-transition) !important;
+    margin-left: 10px !important;
+    font-size: 0.95rem;
 }
 
-.dataTables_filter input:focus {
-    outline: none;
-    border-color: var(--if-primary);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+.dataTables_filter input[type="search"]:focus {
+    outline: none !important;
+    border-color: var(--if-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
+}
+
+.dataTables_length {
+    margin-bottom: 15px;
 }
 
 .dataTables_length label {
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    align-items: center !important;
     gap: 10px;
     font-weight: 500;
+    margin-bottom: 0;
 }
 
 .dataTables_length select {
-    padding: 8px 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    transition: var(--if-transition);
-    margin: 0 10px;
+    padding: 8px 15px !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 6px !important;
+    transition: var(--if-transition) !important;
+    margin: 0 10px !important;
+    font-size: 0.95rem;
 }
 
 .dataTables_length select:focus {
-    outline: none;
-    border-color: var(--if-primary);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none !important;
+    border-color: var(--if-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
 }
 
 .dataTables_info {
-    padding: 10px 0;
-    color: #6c757d;
-    font-weight: 500;
+    padding: 10px 0 !important;
+    color: #6c757d !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem;
 }
 
 .dataTables_paginate {
-    margin-top: 15px;
+    margin-top: 15px !important;
 }
 
 .dataTables_paginate .paginate_button {
-    padding: 8px 12px;
-    margin: 0 3px;
-    border-radius: 6px;
-    transition: var(--if-transition);
-    border: 1px solid #dee2e6;
+    padding: 8px 12px !important;
+    margin: 0 3px !important;
+    border-radius: 6px !important;
+    transition: var(--if-transition) !important;
+    border: 1px solid #dee2e6 !important;
+    font-size: 0.95rem;
 }
 
 .dataTables_paginate .paginate_button:hover {
     background: var(--if-primary) !important;
     color: white !important;
     transform: translateY(-2px);
-    border-color: var(--if-primary);
+    border-color: var(--if-primary) !important;
 }
 
 .dataTables_paginate .paginate_button.current {
     background: var(--if-primary) !important;
     color: white !important;
-    border-color: var(--if-primary);
+    border-color: var(--if-primary) !important;
 }
 
 .dataTables_paginate .paginate_button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
 }
 
 /* Mejoras genéricas a botones de acción en tablas */
@@ -592,6 +606,28 @@ body:not(.loaded) .if-container {
 .if-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    /* Evitar que el scrollbar aparezca/desaparezca dinámicamente */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Estilos para el scrollbar en navegadores WebKit */
+.if-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.if-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.if-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.if-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 /* Skeleton loader para la tabla */
@@ -743,11 +779,14 @@ body.loaded .if-container {
 .if-table-card table tbody tr {
     transition: var(--if-transition);
     border-bottom: 1px solid #e9ecef;
+    /* Evitar que el hover cambie el ancho de la tabla */
+    box-sizing: border-box;
 }
 
 .if-table-card table tbody tr:hover {
     background-color: #f8f9fa;
-    transform: scale(1.01);
+    /* Usar translateY en lugar de scale para evitar cambios de ancho */
+    transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -807,95 +846,101 @@ body.loaded .if-container {
     white-space: nowrap;
 }
 
-/* Mejoras a DataTables controls */
+/* Mejoras a DataTables controls dentro de if-table-card */
 .if-table-card .dataTables_wrapper {
     margin-top: 20px;
 }
 
 .if-table-card .dataTables_filter {
-    margin-bottom: 15px;
+    margin-bottom: 15px !important;
 }
 
 .if-table-card .dataTables_filter label {
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    align-items: center !important;
     gap: 10px;
-    font-weight: 500;
+    font-weight: 500 !important;
+    margin-bottom: 0 !important;
 }
 
-.if-table-card .dataTables_filter input {
-    padding: 8px 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    transition: var(--if-transition);
-    margin-left: 10px;
+.if-table-card .dataTables_filter input[type="search"] {
+    padding: 8px 15px !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 6px !important;
+    transition: var(--if-transition) !important;
+    margin-left: 10px !important;
+    font-size: 0.95rem;
 }
 
-.if-table-card .dataTables_filter input:focus {
-    outline: none;
-    border-color: var(--if-primary);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+.if-table-card .dataTables_filter input[type="search"]:focus {
+    outline: none !important;
+    border-color: var(--if-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
 }
 
 .if-table-card .dataTables_length {
-    margin-bottom: 15px;
+    margin-bottom: 15px !important;
 }
 
 .if-table-card .dataTables_length label {
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    align-items: center !important;
     gap: 10px;
-    font-weight: 500;
+    font-weight: 500 !important;
+    margin-bottom: 0 !important;
 }
 
 .if-table-card .dataTables_length select {
-    padding: 8px 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    transition: var(--if-transition);
-    margin: 0 10px;
+    padding: 8px 15px !important;
+    border: 2px solid #e9ecef !important;
+    border-radius: 6px !important;
+    transition: var(--if-transition) !important;
+    margin: 0 10px !important;
+    font-size: 0.95rem;
 }
 
 .if-table-card .dataTables_length select:focus {
-    outline: none;
-    border-color: var(--if-primary);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none !important;
+    border-color: var(--if-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
 }
 
 .if-table-card .dataTables_info {
-    padding: 10px 0;
-    color: #6c757d;
-    font-weight: 500;
+    padding: 10px 0 !important;
+    color: #6c757d !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem;
 }
 
 .if-table-card .dataTables_paginate {
-    margin-top: 15px;
+    margin-top: 15px !important;
 }
 
 .if-table-card .dataTables_paginate .paginate_button {
-    padding: 8px 12px;
-    margin: 0 3px;
-    border-radius: 6px;
-    transition: var(--if-transition);
-    border: 1px solid #dee2e6;
+    padding: 8px 12px !important;
+    margin: 0 3px !important;
+    border-radius: 6px !important;
+    transition: var(--if-transition) !important;
+    border: 1px solid #dee2e6 !important;
+    font-size: 0.95rem;
 }
 
 .if-table-card .dataTables_paginate .paginate_button:hover {
     background: var(--if-primary) !important;
     color: white !important;
     transform: translateY(-2px);
-    border-color: var(--if-primary);
+    border-color: var(--if-primary) !important;
 }
 
 .if-table-card .dataTables_paginate .paginate_button.current {
     background: var(--if-primary) !important;
     color: white !important;
-    border-color: var(--if-primary);
+    border-color: var(--if-primary) !important;
 }
 
 .if-table-card .dataTables_paginate .paginate_button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
 }
 
 /* Modales mejorados */

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
         
@@ -28,33 +28,8 @@
             <i class="fa fa-home"></i>
         </a>
 
-        <!-- Campana de notificaciones -->
-        <div class="position-fixed top-0 end-0 p-3 z-3" style="z-index: 1055;">
-            <button class="btn btn-light position-relative" data-bs-toggle="modal" data-bs-target="#modalNotificaciones">
-                <i class="bi bi-bell-fill fs-4"></i>
-                <span id="contadorNotificaciones" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">
-                0
-                </span>
-            </button>
-        </div>
 
-        <!-- Modal de notificaciones -->
-        <div class="modal fade if-modal" id="modalNotificaciones" tabindex="-1" aria-labelledby="modalNotificacionesLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="bi bi-bell-fill"></i>
-                            <span>Notificaciones</span>
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <ul id="listaNotificaciones" class="list-group list-group-flush"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Contenedor principal con estilos mejorados -->
         <main class="if-container">
@@ -101,15 +76,17 @@
                 </div>
 
                 <div class="if-table-wrapper">
-                    <table id="tablaDespachosAdmin" class="table table-striped">
+                    <table id="tablaPedidoAdmin" class="table table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Sucursal</th>
-                                <th>Fecha</th>
+                                <th>S Solicitud</th>
+                                <th>S Entrega</th>
+                                <th>Fecha solicitud</th>
+                                <th>Fecha Entrega</th>
                                 <th>Estado</th>
-                                <th>Productos</th>
-                                <th>Total Solicitado</th>
+                                <th>Nombre Cliente</th>
+                                <th>No Cedula</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -192,26 +169,7 @@
             </div>
         </div>
 
-        <!-- Modal Ver Devolución -->
-        <div class="modal fade if-modal" id="modalVerDevolucion" tabindex="-1" aria-labelledby="modalVerDevolucionLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalVerDevolucionLabel">
-                            <i class="fa fa-undo"></i>
-                            <span>Detalles de la Devolución</span>
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Observaciones:</strong> <span id="observacionesDevolucion"></span></p>
-                        <hr>
-                        <h6>Productos devueltos:</h6>
-                        <div id="listaProductosDevueltos"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Modal de Confirmación para Eliminar -->
         <div class="modal fade if-modal" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarLabel" aria-hidden="true">
@@ -246,7 +204,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
         <script type="module" src="js/pedidoproducion.js"></script>
     </body>
 </html>

@@ -1,90 +1,16 @@
-import { obtenerDespachosSucursal, obtenerDetalleDespacho, confirmarRecepcion, supabase, obtenerEstadoDespacho } from './app.js';
-let despachoActual = null;
-let estadoDespachoActual = null;
-let devoluciones = [];
+import { obtenerPedidoSucursal } from '../backend/endpoints/pedidoBackend.js';
+import {  } from '../backend/endpoints/detallePedidoBackend.js';
+
 $(document).ready(async () => {
     // Evita que se muestre la página antes de tiempo
     document.body.classList.remove('loaded');
-    await cargarDevoluciones();
-    // Suscripción a cambios en la tabla 'devoluciones'
-    const channel = supabase
-        .channel('devoluciones_changes')
-        .on('postgres_changes', {
-            event: '*', // Solo para inserciones (ajusta si necesitas UPDATE/DELETE)
-            schema: 'inventario',
-            table: 'devoluciones'
-        }, async (payload) => {
-            console.log('Nueva devolución registrada:', payload.new.id_despacho);
 
-            // 1. Actualiza el array local
-            if (!devoluciones.includes(payload.new.id_despacho)) {
-                devoluciones.push(payload.new.id_despacho);
-            }
-
-            // 2. Busca la fila en DataTables y actualiza SU columna de acciones
-            const tabla = $('#tablaDespachosSucursal').DataTable();
-            const filas = tabla.rows().nodes();
-
-            $(filas).each(function () {
-                const rowId = $(this).find('.ver-detalle').data('id');
-                if (rowId === payload.new.id_despacho) {
-                    const nuevoBoton = `
-            <button class="btn btn-warning btn-sm btn-devolver" 
-                    data-id="${payload.new.id_despacho}">
-                Ver Devolución
-            </button>
-            `;
-
-                    // Actualiza solo la celda de acciones (última celda)
-                    $(this).find('td:last').html(`
-            <button class="btn btn-primary btn-sm ver-detalle" 
-                    data-id="${rowId}" 
-                    data-estado="${$(this).find('.ver-detalle').data('estado')}">
-                Ver
-            </button>
-            ${nuevoBoton}
-            `);
-                }
-            });
-        })
-        .subscribe();
-    // Cargar todas las devoluciones al inicializar la página
-    async function cargarDevoluciones() {
-        const { data, error } = await supabase
-            .schema('inventario')
-            .from('devoluciones')
-            .select('id_despacho');
-
-        if (!error) devoluciones = data.map(d => d.id_despacho);
-    }
-
-    const tabla = $('#tablaDespachosSucursal').DataTable({
+    const tabla = $('#tablaPedidoSucursal').DataTable({
         ajax: async (data, callback) => {
-            const datos = await obtenerDespachosSucursal();
+            const datos = await obtenerPedidoSucursal();
             // Formatear fechas
-            const despachosFormateados = datos.map(item => {
-                console.log('Fecha 1', item.fecha_solicitud);
-                const fecha = new Date(item.fecha_solicitud);
-                console.log('Fecha 2', fecha);
-                const fechaFormateada = fecha.toLocaleString("es-CO", {
-                    year: "numeric",
-                    day: "2-digit",
-                    month: "2-digit",
 
-                    hour: "2-digit",
-                    minute: "2-digit"
-                });
-                console.log('Fecha 3', fechaFormateada);
-                return {
-                    ...item,
-                    fecha_solicitud_formateada: fechaFormateada
-                };
-            });
-            console.log('formateados', despachosFormateados);
-            console.log('sin formatear', datos);
-            const tipodedato = typeof datos.fecha_solicitud;
-            console.log(tipodedato)
-            callback({ data: despachosFormateados });
+            callback({ data: datos });
             // Al final de la carga inicial de la tabla, después del callback
             setTimeout(() => {
                 document.body.classList.add('loaded');
@@ -106,7 +32,7 @@ $(document).ready(async () => {
         },
         order: [[1, 'desc']],
         columns: [
-            { data: 'id_despacho' },
+            { data: 'id_pedido' },
             {
                 data: 'fecha_solicitud',
                 render: function (data, type, row) {
@@ -124,6 +50,24 @@ $(document).ready(async () => {
                     return data;
                 }
             },
+            { data: 'fecha_entrega' ,
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        const fecha = new Date(data);
+                        return fecha.toLocaleString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                    }
+                    return data;
+                }
+            }, 
+            { data: 'cliente_nombre' },  
+            { data: 'cliente_documento' },                                 
             {
                 data: 'estado',
                 render: function (data) {
@@ -137,20 +81,15 @@ $(document).ready(async () => {
                     return `<span class="badge bg-${color}" style="font-size:0.9em;">${data}</span>`;
                 }
             },
-            { data: 'total_productos' },
-            { data: 'total_enviado' },
-            { data: 'total_recibido' },
+
+
+
             {
                 data: null,
                 render: (row) => {
-                    const existeDevolucion = devoluciones.includes(row.id_despacho);
-                    const botonDevolver = existeDevolucion
-                        ? `<button class="btn btn-warning btn-sm btn-devolver" data-id="${row.id_despacho}">Ver Devolución</button>`
-                        : '';
-
                     return `
-                    <button class="btn btn-primary btn-sm ver-detalle" data-id="${row.id_despacho}" data-estado="${row.estado}">Ver</button>
-                    ${botonDevolver}
+                    <button class="btn btn-primary btn-sm ver-detalle" data-id="${row.id_pedido}" data-estado="${row.estado}">Ver</button>
+                    
                 `;
                 }
             }
@@ -324,334 +263,85 @@ $(document).ready(async () => {
         $('#tablaDespachosSucursal').DataTable().ajax.reload();
     });
 });
-import { obtenerProductosnTrue1, obtenerProductosnTrue2, obtenerProductosnTrue3, crearDespachoConDetalles } from './app.js';
-supabase
-    .channel('productos_updates') // Nombre del canal, puede ser cualquier string
-    .on(
-        'postgres_changes',
-        { event: '*', schema: 'inventario', table: 'productosn' },
-        (payload) => {
-            console.log('Cambio detectado en productos:', payload);
-            cargarTablasProductos(); // Refresca la tabla sin recargar la página
-        }
-    )
-    .subscribe();
-async function cargarTablasProductos() {
-    const productosDisponibles1 = await obtenerProductosnTrue1();
-    const productosDisponibles2 = await obtenerProductosnTrue2();
-    const productosDisponibles3 = await obtenerProductosnTrue3();
-    console.log("Productos true", productosDisponibles1);
-    const cuerpo1 = $('#tablaProductosSolicitud1 tbody');
-    const cuerpo2 = $('#tablaProductosSolicitud2 tbody');
-    const cuerpo3 = $('#tablaProductosSolicitud3 tbody');
-    cuerpo1.empty();
-    cuerpo2.empty();
-    cuerpo3.empty();
-    productosDisponibles1.forEach(p => {
-        cuerpo1.append(`
-        <tr>
-            <td>${p.nombre_producto}</td>
-            <td>${p.provedor_producto}</td>
-            <td>${p.nombre_um}</td>
-            <td>${p.und_producto}</td>
-            <td>
-            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
-            <div class="invalid-feedback d-none"></div>
-            </td>
-        </tr>
-        `);
-    });
-    productosDisponibles2.forEach(p => {
-        cuerpo2.append(`
-        <tr>
-            <td>${p.nombre_producto}</td>
-            <td>${p.provedor_producto}</td>
-            <td>${p.nombre_um}</td>
-            <td>${p.und_producto}</td>
-            <td>
-            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
-            <div class="invalid-feedback d-none"></div>
-            </td>
-        </tr>
-        `);
-    });
-    productosDisponibles3.forEach(p => {
-        cuerpo3.append(`
-        <tr>
-            <td>${p.nombre_producto}</td>
-            <td>${p.provedor_producto}</td>
-            <td>${p.nombre_um}</td>
-            <td>${p.und_producto}</td>
-            <td>
-            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
-            <div class="invalid-feedback d-none"></div>
-            </td>
-        </tr>
-        `);
-    });
-
-
-
-    // Re-aplicar filtro si existe
-    const filtroActual = $('#buscadorProductos').val();
-    if (filtroActual) {
-        $('#buscadorProductos').trigger('input');
-    }
-
-    // Validación delegaada para solicitudes
-    $(document).off('input', '.cantidad-solicitada').on('input', '.cantidad-solicitada', function () {
-        const input = $(this);
-        const valor = parseInt(input.val());
-        const stock = parseInt(input.data('stock'));
-        const feedback = input.next('.invalid-feedback');
-
-        if (isNaN(valor) || valor < 0) {
-            input.addClass('is-invalid');
-            feedback.text('Min 0').removeClass('d-none');
-        } else if (valor > stock) {
-            input.addClass('is-invalid');
-            feedback.text(`Max ${stock}`).removeClass('d-none');
-        } else {
-            input.removeClass('is-invalid');
-            feedback.addClass('d-none');
-        }
-    });
-}
-// 🔍 Filtrado global para las 3 tablas
-$(document).on('input', '#buscadorProductos', function () {
-    const texto = $(this).val().toLowerCase();
-    // Filtra todas las filas de las 3 tablas
-    ['#tablaProductosSolicitud1', '#tablaProductosSolicitud2', '#tablaProductosSolicitud3'].forEach(id => {
-        $(`${id} tbody tr`).each(function () {
-            const fila = $(this);
-            const textoFila = fila.text().toLowerCase();
-            fila.toggle(textoFila.includes(texto));
-        });
-    });
-});
-
 
 $(document).ready(async () => {
     await cargarTablasProductos();
+    let enviandoSolicitud = false; // Bandera para prevenir múltiples clics
+    
     $('#btnEnviarSolicitud').click(async () => {
-        const cantidades = document.querySelectorAll('.cantidad-solicitada');
-        const productosSolicitados = [];
-        let hayError = false;
-        cantidades.forEach(input => {
-            const cantidad = parseInt(input.value);
-            const stock = parseInt(input.dataset.stock);
+        // Prevenir múltiples clics
+        if (enviandoSolicitud) {
+            return;
+        }
 
-            if (input.classList.contains('is-invalid') || cantidad > stock) {
-                hayError = true;
+        const btn = $('#btnEnviarSolicitud');
+        const textoOriginal = btn.html();
+        
+        // Deshabilitar botón y mostrar indicador de carga
+        enviandoSolicitud = true;
+        btn.prop('disabled', true);
+        btn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Enviando...');
+
+        try {
+            const cantidades = document.querySelectorAll('.cantidad-solicitada');
+            const productosSolicitados = [];
+            let hayError = false;
+            cantidades.forEach(input => {
+                const cantidad = parseInt(input.value);
+                const stock = parseInt(input.dataset.stock);
+
+                if (input.classList.contains('is-invalid') || cantidad > stock) {
+                    hayError = true;
+                    return;
+                }
+
+                if (cantidad > 0) {
+                    productosSolicitados.push({
+                        id_producto: input.dataset.id,
+                        cantidad
+                    });
+                }
+            });
+
+            if (hayError) {
+                alert('Hay productos solicitados que exceden el stock disponible o son inválidos.');
+                // Rehabilitar botón y restaurar texto original
+                enviandoSolicitud = false;
+                btn.prop('disabled', false);
+                btn.html(textoOriginal);
                 return;
             }
-
-            if (cantidad > 0) {
-                productosSolicitados.push({
-                    id_producto: input.dataset.id,
-                    cantidad
-                });
+            if (productosSolicitados.length === 0) {
+                alert('Debes seleccionar al menos un producto con cantidad mayor a 0.');
+                // Rehabilitar botón y restaurar texto original
+                enviandoSolicitud = false;
+                btn.prop('disabled', false);
+                btn.html(textoOriginal);
+                return;
             }
-        });
-
-        if (hayError) {
-            alert('Hay productos solicitados que exceden el stock disponible o son inválidos.');
-            return;
-        }
-        if (productosSolicitados.length === 0) {
-            alert('Debes seleccionar al menos un producto con cantidad mayor a 0.');
-            return;
-        }
-        const exito = await crearDespachoConDetalles(productosSolicitados);
-        if (exito) {
-            alert('Solicitud enviada correctamente.');
-            $('#modalNuevaSolicitud').modal('hide');
-            $('.modal-backdrop').remove(); // Elimina el fondo gris
-            $('body').removeClass('modal-open'); // Restaura el scroll
-        } else {
+            
+            const exito = await crearDespachoConDetalles(productosSolicitados);
+            if (exito) {
+                alert('Solicitud enviada correctamente.');
+                $('#modalNuevaSolicitud').modal('hide');
+                $('.modal-backdrop').remove(); // Elimina el fondo gris
+                $('body').removeClass('modal-open'); // Restaura el scroll
+                
+                // Limpiar los campos después de enviar exitosamente
+                cantidades.forEach(input => {
+                    input.value = 0;
+                });
+            } else {
+                alert('Error al enviar la solicitud.');
+            }
+        } catch (error) {
+            console.error('Error al enviar solicitud:', error);
             alert('Error al enviar la solicitud.');
+        } finally {
+            // Rehabilitar botón y restaurar texto original
+            enviandoSolicitud = false;
+            btn.prop('disabled', false);
+            btn.html(textoOriginal);
         }
     });
 });
-import { obtenerNotificaciones, marcarNotificacionVista } from './app.js';
-supabase
-    .channel('notificaciones_updates') // Nombre del canal, puede ser cualquier string
-    .on(
-        'postgres_changes',
-        { event: '*', schema: 'inventario', table: 'notificaciones' },
-        (payload) => {
-            console.log('Cambio detectado en notificaciones:', payload);
-            cargarNotificaciones(); // Refresca la tabla sin recargar la página
-        }
-    )
-    .subscribe();
-async function cargarNotificaciones() {
-    const notificaciones = await obtenerNotificaciones();
-    const lista = document.getElementById('listaNotificaciones');
-    lista.innerHTML = '';
-    let noLeidas = 0;
-    notificaciones.forEach(n => {
-        if (!n.visto) noLeidas++;
-        const li = document.createElement('li');
-        li.className = `list - group - item d - flex justify - content - between align - items - start ${n.visto ? '' : 'fw-bold'} `;
-        li.innerHTML = `
-            <div class="ms-2 me-auto">
-            ${n.mensaje} <br>
-                <small class="text-muted">${new Date(n.fecha).toLocaleString('es-CO', { hour12: true, hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</small>
-            </div>
-        ${n.id_despacho ? `<button class="btn btn-sm btn-link ver-despacho" data-id="${n.id_despacho}" data-noti="${n.id_notificacion}">Ver</button>` : ''}
-    `;
-        lista.appendChild(li);
-    });
-    const contador = document.getElementById('contadorNotificaciones');
-    if (noLeidas > 0) {
-        contador.style.display = 'inline-block';
-        contador.textContent = noLeidas;
-    } else {
-        contador.style.display = 'none';
-    }
-}
-// Escuchar apertura del modal para marcar como visto
-$(document).on('click', '.ver-despacho', async function () {
-    const idNoti = this.dataset.noti;
-    const idDespacho = this.dataset.id;
-    await marcarNotificacionVista(idNoti);
-    cargarNotificaciones();
-    // Cierra el modal de notificaciones
-    // Puedes redirigir o abrir modal de detalle si estás en el panel
-    console.log('Ver despacho:', idDespacho);
-    const modalNotificaciones = bootstrap.Modal.getInstance(document.getElementById('modalNotificaciones'));
-    if (modalNotificaciones) modalNotificaciones.hide();
-});
-// Al abrir el modal de notificaciones, recargar
-$('#modalNotificaciones').on('show.bs.modal', () => {
-    cargarNotificaciones();
-});
-// Carga inicial al cargar página
-cargarNotificaciones();
-$('#btnDevoluciones').on('click', function () {
-    // Obtenemos el despachoId almacenado en el botón
-    const despachoId = $(this).data('despacho-id');
-    if (despachoId) {
-        // Cerramos el modal actual (opcional)
-        $('#modalDetalleSucursal').modal('hide');
-        // Abrimos el modal de devolución
-        abrirModalDevolucion(despachoId);
-    } else {
-        console.error('No se encontró el ID del despacho.');
-    }
-});
-async function abrirModalDevolucion(despachoId) {
-    document.getElementById('input_despacho').value = despachoId;
-    document.getElementById('productos_devolver').innerHTML = '';
-    const { data, error } = await supabase
-        .schema('inventario')
-        .from('detalle_despacho')
-        .select('id_producto, cantidad_recibida, productosn(nombre_producto, provedor_producto, unidad_medida(nombre_um))')
-        .eq('id_despacho', despachoId)
-        .not('cantidad_recibida', 'is', null);
-    if (error) return alert('Error al cargar productos');
-    data.forEach(p => {
-        document.getElementById('productos_devolver').innerHTML += `
-        < div class="mb-2" >
-            <label>${p.productosn.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um} (recibido: ${p.cantidad_recibida})</label>
-            <input type="number" name="prod_${p.id_producto}" max="${p.cantidad_recibida}" min="0" class="form-control" placeholder="Cantidad a devolver">
-        </div>
-    `;
-    });
-    const modal = new bootstrap.Modal(document.getElementById('modalDevolucion'));
-    modal.show();
-}
-document.getElementById('formDevolucion').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const despachoId = parseInt(document.getElementById('input_despacho').value);
-    const observaciones = document.getElementById('observaciones_dev').value.trim();
-    const inputs = document.querySelectorAll('#productos_devolver input');
-    let productos = [];
-    inputs.forEach(input => {
-        const cantidad = parseInt(input.value);
-        if (cantidad > 0) {
-            const id_producto = parseInt(input.name.split('_')[1]);
-            productos.push({ id_producto, cantidad_devuelta: cantidad });
-        }
-    });
-    if (productos.length === 0) {
-        alert("Debe ingresar al menos un producto para devolver.");
-        return;
-    }
-    // Buscar sucursal del despacho
-    const { data: despachoData, error: errorDesp } = await supabase
-        .schema('inventario')
-        .from('despachos')
-        .select('id_sucursal')
-        .eq('id_despacho', despachoId)
-        .single();
-    if (errorDesp) return alert('Error buscando sucursal');
-    // Insertar devolución
-    const { data: devolucion, error: errDev } = await supabase
-        .schema('inventario')
-        .from('devoluciones')
-        .insert({
-            id_despacho: despachoId,
-            id_sucursal: despachoData.id_sucursal,
-            observaciones
-        })
-        .select()
-        .single();
-    if (errDev) return alert('Error registrando devolución');
-    // Insertar detalles
-    for (let p of productos) {
-        await supabase.schema('inventario').from('detalle_devolucion').insert({
-            id_devolucion: devolucion.id_devolucion,
-            id_producto: p.id_producto,
-            cantidad_devuelta: p.cantidad_devuelta
-        });
-    }
-    alert("Devolución registrada correctamente.");
-    bootstrap.Modal.getInstance(document.getElementById('modalDevolucion')).hide();
-});
-$('#tablaDespachosSucursal').on('click', '.btn-warning', function () {
-    const despachoId = $(this).closest('tr').find('.ver-detalle').data('id');
-    console.log(despachoId)
-    abrirModalVerDevolucion(despachoId);
-});
-async function abrirModalVerDevolucion(despachoId) {
-    // Buscar la devolución relacionada a ese despacho
-    const { data: devolucion, error: errorDev } = await supabase
-        .schema('inventario')
-        .from('devoluciones')
-        .select('id_devolucion, observaciones')
-        .eq('id_despacho', despachoId)
-        .limit(1)
-        .single();
-    if (errorDev || !devolucion) {
-        alert('No se encontró devolución para este despacho');
-        return;
-    }
-    // Mostrar observaciones
-    document.getElementById('observacionesDevolucion').textContent = devolucion.observaciones || 'Sin observaciones';
-    // Obtener detalle de productos devueltos
-    const { data: productos, error: errorDet } = await supabase
-        .schema('inventario')
-        .from('detalle_devolucion')
-        .select('cantidad_devuelta, observaciones, productosn(nombre_producto,unidad_medida(nombre_um),provedor_producto)')
-        .eq('id_devolucion', devolucion.id_devolucion);
-    if (errorDet) {
-        alert('Error al cargar productos devueltos');
-        return;
-    }
-    const contenedor = document.getElementById('listaProductosDevueltos');
-    contenedor.innerHTML = '';
-    productos.forEach(p => {
-        contenedor.innerHTML += `
-        < div class="mb-2 border-bottom pb-2" >
-            <strong>${p.productosn.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</strong><br>
-            Cantidad devuelta: ${p.cantidad_devuelta}<br>
-            Observación: ${p.observaciones || 'Sin observación'}
-        </div>
-        `;
-    });
-    // Mostrar el modal
-    const modal = new bootstrap.Modal(document.getElementById('modalVerDevolucion'));
-    modal.show();
-}
