@@ -593,7 +593,7 @@ async function abrirModalDevolucion(despachoId) {
     data.forEach(p => {
         document.getElementById('productos_devolver').innerHTML += `
         < div class="mb-2" >
-            <label>${p.productosn.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um} (recibido: ${p.cantidad_recibida})</label>
+            <label>${p.productosn?.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um} (recibido: ${p.cantidad_recibida})</label>
             <input type="number" name="prod_${p.id_producto}" max="${p.cantidad_recibida}" min="0" class="form-control" placeholder="Cantidad a devolver">
         </div>
     `;
@@ -684,7 +684,7 @@ async function abrirModalVerDevolucion(despachoId) {
     productos.forEach(p => {
         contenedor.innerHTML += `
         < div class="mb-2 border-bottom pb-2" >
-            <strong>${p.productosn.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</strong><br>
+            <strong>${p.productosn?.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</strong><br>
             Cantidad devuelta: ${p.cantidad_devuelta}<br>
             Observación: ${p.observaciones || 'Sin observación'}
         </div>

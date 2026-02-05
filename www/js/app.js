@@ -626,7 +626,7 @@ export async function obtenerDetalleDespacho(id_despacho, tipo) {
   
   return data.map(item => ({
     ...item,
-    nombre_producto: item.productosn.nombre_producto
+    nombre_producto: item.productosn?.nombre_producto
   }));
 }
 

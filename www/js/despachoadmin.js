@@ -95,7 +95,7 @@ $(document).ready(async () => {
                         .select('productosn(nombre_producto)')
                         .eq('id_despacho', item.id_despacho);
 
-                    const nombresProductos = productos?.map(p => p.productosn.nombre_producto).join(', ') || '';
+                    const nombresProductos = productos?.map(p => p.productosn?.nombre_producto).join(', ') || '';
 
                     const fecha = new Date(item.fecha_solicitud);
                     const fechaFormateada = fecha.toLocaleString("es-CO", {
@@ -248,7 +248,7 @@ $(document).ready(async () => {
                     .select('productosn(nombre_producto)')
                     .eq('id_despacho', item.id_despacho);
 
-                const nombresProductos = productosDetalle?.map(p => p.productosn.nombre_producto).join(', ') || '';
+                const nombresProductos = productosDetalle?.map(p => p.productosn?.nombre_producto).join(', ') || '';
 
                 const fecha = new Date(item.fecha_solicitud);
                 const fechaFormateada = fecha.toLocaleString("es-CO", {
@@ -530,7 +530,7 @@ async function abrirModalVerDevolucion(despachoId) {
     productos.forEach(p => {
         contenedor.innerHTML += `
         <div class="mb-2 border-bottom pb-2">
-            <strong>${p.productosn.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</strong><br>
+            <strong>${p.productosn?.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</strong><br>
             Cantidad devuelta: ${p.cantidad_devuelta}<br>
             Observación: ${p.observaciones || 'Sin observación'}
         </div>
