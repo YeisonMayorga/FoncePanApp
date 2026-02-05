@@ -18,7 +18,7 @@
         cordova.getAppVersion.getVersionNumber(resolve, reject);
       });
 
-      const res = await fetch('https://updates.sexafeel.com/version.php');
+      const res = await fetch('https://updates.foncepan.com/version.php');
       const data = await res.json();
 
       const latest = data.android.version;
