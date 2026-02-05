@@ -1,5 +1,5 @@
 import { eliminarDespacho } from '../backend/endpoints/despachoBackend.js';
-import { obtenerDespachosAdmin, obtenerDetalleDespacho, actualizarEstadoDespacho, supabase, obtenerEstadoDespacho } from './app.js';
+import { obtenerDespachosAdmin, obtenerDetalleDespacho, supabase, actualizarEstadoDespacho, obtenerEstadoDespacho } from './app.js';
 let idDespachoSeleccionado = null;
 let estadoDespachoActual = null;
 let devoluciones = [];
