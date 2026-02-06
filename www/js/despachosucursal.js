@@ -1,5 +1,5 @@
 import { obtenerDespachosSucursal, obtenerDetalleDespacho, confirmarRecepcion, obtenerEstadoDespacho } from './app.js';
-import {supabase} from '../supabase/supabaseCliente.js';
+import {supabase} from '../backend/supabase/supabaseCliente.js';
 let despachoActual = null;
 let estadoDespachoActual = null;
 let devoluciones = [];
