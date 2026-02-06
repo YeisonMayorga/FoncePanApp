@@ -1,7 +1,7 @@
 {
   "name": "foncepan",
   "displayName": "FoncePan",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Gestión FoncePan",
   "main": "main.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "https://sexafeel.com/updates/uploads/windows/"
+        "url": "https://foncepan.com/"
       }
     ]
   },

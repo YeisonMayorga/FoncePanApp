@@ -99,19 +99,19 @@ async function checkAuthAndRole() {
         'btn-estadistica',
         'btn-despachoAdmin',
         'btn-controlDespacho',
-        'btn-clientes',
-        'btn-congelacion',
-        'btn-inventario-No-Controlado',
-        'btn-pedidosProduccion',
-        'btn-usuario'
+        //'btn-clientes',
+        //'btn-congelacion',
+        //'btn-inventario-No-Controlado',
+        //'btn-pedidosProduccion',
+        //'btn-usuario'
       ]);
       break;
 
     case 2: // sucursal
       mostrar([
         'btn-despachoSucursal',
-        'btn-clientes',
-        'btn-pedidosSucursal'
+        //'btn-clientes',
+        //'btn-pedidosSucursal'
       ]);
       break;
 

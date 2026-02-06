@@ -1,5 +1,5 @@
 import {actualizarEntradan, actualizarSalidan, agregarEntradan, agregarSalidan, eliminarEntradan, eliminarSalidan, obtenerEntradasn, obtenerProductosn, obtenerProductosUndn, obtenerSalidasn, obtenerStockProducton } from './app.js';
-import {supabase} from '../supabase/supabaseCliente.js';
+import {supabase} from '../backend/supabase/supabaseCliente.js';
 let entradasGlobal = []; 
 let salidasGlobal = [];
 $(document).ready(async function () {

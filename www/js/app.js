@@ -266,8 +266,7 @@ export async function obtenerEntradasn() {
     .schema('inventario')    
     .from('vista_entradasn') // Reemplaza con tu tabla o vista real
     .select('*')
-    .order('fecha_entrada', { ascending: false })
-    .limit(500);
+    .order('fecha_entrada', { ascending: false });
     if (error) {
         console.error('Error al obtener entradas:', error);
         return { success: false, error };
@@ -280,8 +279,7 @@ export async function obtenerSalidasn() {
     .schema('inventario')    
     .from('vista_salidasn') // Reemplaza con tu tabla o vista real
     .select('*', { head: false })
-    .order('fecha_salida', { ascending: false })
-    .limit(500); // Devuelve hasta 10,000 filas
+    .order('fecha_salida', { ascending: false }); // Devuelve hasta 10,000 filas
     if (error) {
         console.error('Error al obtener salidas:', error);
         return { success: false, error };

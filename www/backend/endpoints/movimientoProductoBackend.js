@@ -35,8 +35,7 @@ export async function obtenerMovimiento(tipoMovimiento, tipoProducto) {
         `)
         .eq('tipo', tipoMovimiento)      
         .eq('producto.tipo', tipoProducto)
-        .order('fecha_movimiento', { ascending: false })
-        .limit(500);
+        .order('fecha_movimiento', { ascending: false });
 
     if (error) {
         console.error('Error al obtener movimientos:', error);

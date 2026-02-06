@@ -1,5 +1,5 @@
 
-import {supabase} from '../supabase/supabaseCliente.js';
+import {supabase} from '../backend/supabase/supabaseCliente.js';
 import { Chart, LinearScale, CategoryScale, BarController, BarElement, LineController, LineElement, PointElement, Legend, Tooltip, Filler} from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/+esm';
 // Registra los componentes necesarios
 Chart.register(LinearScale, CategoryScale, BarController, BarElement, LineController, LineElement, PointElement, Legend, Tooltip, Filler);
