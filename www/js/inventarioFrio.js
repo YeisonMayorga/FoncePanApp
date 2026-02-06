@@ -1,7 +1,9 @@
-import {obtenerProductos, agregarProducto, actualizarProducto, eliminarProducto, agregarEntrada, agregarSalida, supabase, obtenerStockProducto } from './app.js';
+import { supabase } from '../backend/supabase/supabaseCliente.js';
+import { agregarMovimiento } from '../backend/endpoints/movimientoProductoBackend.js';
+import { agregarProducto, obtenerProductosActivos, actualizarProducto, eliminarProducto, obtenerStockProducto } from '../backend/endpoints/productoBackend.js';
 
 let productosGlobal = []; // Declara variable para guardar datos de los productos
-
+const tipoProducto = 'frio';
 $(document).ready(async function () {
     // Evita que se muestre la página antes de tiempo
     document.body.classList.remove('loaded');
@@ -88,7 +90,7 @@ $(document).ready(async function () {
         },
 
         ajax: async function (data, callback) {
-            productosGlobal = await obtenerProductos();
+            productosGlobal = await obtenerProductosActivos(tipoProducto);
             callback({ data: productosGlobal });
             // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
             setTimeout(() => {
@@ -101,7 +103,7 @@ $(document).ready(async function () {
     //Función para actualizar datos de la tabla
     async function actualizarTabla() {
         const paginaActual = table.page(); // Guarda la página actual
-        const productos = await obtenerProductos(); // Obtiene datos actualizados
+        const productos = await obtenerProductosActivos(tipoProducto); // Obtiene datos actualizados
 
         table.clear().rows.add(productos).draw(); // Actualiza los datos
         table.page(paginaActual).draw(false);     // 🔄 Vuelve a la misma página
@@ -122,7 +124,7 @@ $(document).ready(async function () {
     .channel('productos_updates') // Nombre del canal, puede ser cualquier string
     .on(
         'postgres_changes',
-        { event: '*', schema: 'inventario', table: 'productos' },
+        { event: '*', schema: 'inventario', table: 'producto' },
         (payload) => {
             console.log('Cambio detectado en productos:', payload);
             actualizarTabla(); // Refresca la tabla sin recargar la página
@@ -147,7 +149,7 @@ $(document).ready(async function () {
         $('#formulario')[0].reset();
         modo = "editar";  // Cambiamos el modo a "editar"
         idProductoEditar = $(this).data('id');  // Guardamos el ID del producto a editar
-        productosGlobal = await obtenerProductos();
+        productosGlobal = await obtenerProductosActivos(tipoProducto);
         let productos = productosGlobal.find(p => p.id_producto == idProductoEditar);
         console.log(productos)
         console.log("Editar producto con ID:", idProductoEditar); // Para verificar si se captura el ID
@@ -165,7 +167,7 @@ $(document).ready(async function () {
         const unidades = $('#und_producto').val();
         
         if (modo === "agregar") {
-            await agregarProducto(nombre, unidades);
+            await agregarProducto(nombre, unidades, tipoProducto);
         } else if (modo === "editar" && idProductoEditar !== null) {
             await actualizarProducto(idProductoEditar, nombre, unidades);
         }
@@ -194,7 +196,7 @@ $(document).ready(async function () {
         $('#formEntradaSalida')[0].reset(); // Limpiar los campos del formulario
         $('#modalEntradaSalida').modal('show');
         $('#mensajeErrorDatos').hide();
-        const productos = await obtenerProductos();
+        const productos = await obtenerProductosActivos(tipoProducto);
         console.log("Productos obtenidos:", productos); // Verificar que hay productos
     
         if (!productos || productos.length === 0) {
@@ -216,11 +218,10 @@ $(document).ready(async function () {
         const idProducto = $('#productoSelect').val();
         const unidades = parseInt($('#cantidad').val(), 10);    
         const botonPresionado = $(document.activeElement).attr('id'); // Obtiene el id del botón que se presionó
-        const hoy = new Date().toISOString().split('T')[0];
 
         if (botonPresionado === "btnAgregarEntrada") {
             console.log("Se presionó Agregar Entrada");
-            await agregarEntrada(idProducto, unidades);
+            await agregarMovimiento('entrada', idProducto, unidades);
         } 
         else if (botonPresionado === "btnAgregarSalida") {
 
@@ -233,7 +234,7 @@ $(document).ready(async function () {
                 return;
             }
             console.log("Se presionó Agregar Salida");
-            await agregarSalida(idProducto, unidades);
+            await agregarMovimiento('salida', idProducto, unidades);
         }
 
         actualizarTabla(); // Refresca la tabla correctamente

@@ -1,4 +1,5 @@
-import {actualizarProducton, agregarEntradan, agregarProducton, agregarSalidan, eliminarProducton, obtenerProductosn, obtenerStockProducton, obtenerUm, supabase } from './app.js';
+import {actualizarProducton, agregarEntradan, agregarProducton, agregarSalidan, eliminarProducton, obtenerProductosn, obtenerStockProducton, obtenerUm } from './app.js';
+import {supabase} from '../supabase/supabaseCliente.js';
 
 let productosGlobal = []; // Declara variable para guardar datos de los productos
 

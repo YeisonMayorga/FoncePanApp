@@ -1,8 +1,9 @@
-import {obtenerProductos, obtenerEntradas, obtenerSalidas, agregarEntrada, agregarSalida, actualizarEntrada, eliminarEntrada, actualizarSalida, eliminarSalida, supabase, obtenerProductosUnd, obtenerStockProducto} from './app.js';
-
+import { actualizarMovimiento, agregarMovimiento, eliminarMovimiento, obtenerMovimiento } from '../backend/endpoints/movimientoProductoBackend.js';
+import { obtenerProductosActivos, obtenerProductosActivosExistentes, obtenerStockProducto } from '../backend/endpoints/productoBackend.js';
+import {supabase} from '../backend/supabase/supabaseCliente.js';
 let entradasGlobal = []; 
 let salidasGlobal = [];
-
+const tipoProducto = 'frio';
 $(document).ready(async function () {
     // Evita que se muestre la página antes de tiempo
     document.body.classList.remove('loaded');
@@ -61,7 +62,7 @@ $(document).ready(async function () {
         // --- Tabla Entradas ---
         const columnasEntradas = [
             { 
-                data: 'fecha_entrada', 
+                data: 'fecha_movimiento', 
                 title: 'Fecha',
                 render: function(data, type, row) {
                     if (type === 'display' || type === 'filter') {
@@ -80,8 +81,8 @@ $(document).ready(async function () {
                     return data; // Para otros tipos (sort, etc.), devolver el valor original
                 }
             },
-            { data: 'nombre_producto', title: 'Nombre' },
-            { data: 'und_entrada', title: 'Und' },
+            { data: 'producto.nombre_producto', title: 'Nombre' },
+            { data: 'und_movimiento', title: 'Und' },
         ];
 
         if (mostrarAcciones) {
@@ -89,15 +90,15 @@ $(document).ready(async function () {
             data: null,
             title: 'Acciones',
             render: (data, type, row) => `
-                <button class='btn btn-warning btnEditar' data-id='${row.id_entrada}'>Editar</button>
-                <button class='btn btn-danger btnEliminar' data-id='${row.id_entrada}'>Eliminar</button>
+                <button class='btn btn-warning btnEditar' data-id='${row.id_movimiento}'>Editar</button>
+                <button class='btn btn-danger btnEliminar' data-id='${row.id_movimiento}'>Eliminar</button>
             `
             });
         }
 
         tableEntradas =  $('#tablaEntradas').DataTable({
             ajax: async (data, callback) => {
-                entradasGlobal = await obtenerEntradas();
+                entradasGlobal = await obtenerMovimiento('entrada', tipoProducto);
                 callback({ data: entradasGlobal });
                 // 🟢 QUITAR LOADER CUANDO LA TABLA YA TIENE DATOS
                 setTimeout(() => {
@@ -126,7 +127,7 @@ $(document).ready(async function () {
         // --- Tabla Salidas ---
         const columnasSalidas = [
             { 
-                data: 'fecha_salida', 
+                data: 'fecha_movimiento', 
                 title: 'Fecha',
                 render: function(data, type, row) {
                     if (type === 'display' || type === 'filter') {
@@ -145,8 +146,8 @@ $(document).ready(async function () {
                     return data; // Para otros tipos (sort, etc.), devolver el valor original
                 }
             },
-            { data: 'nombre_producto', title: 'Nombre' },
-            { data: 'und_salida', title: 'Und' },
+            { data: 'producto.nombre_producto', title: 'Nombre' },
+            { data: 'und_movimiento', title: 'Und' },
         ];
 
         if (mostrarAcciones) {
@@ -154,8 +155,8 @@ $(document).ready(async function () {
             data: null,
             title: 'Acciones',
             render: (data, type, row) => `
-                <button class='btn btn-warning btnEditar' data-id='${row.id_salida}'>Editar</button>
-                <button class='btn btn-danger btnEliminar' data-id='${row.id_salida}'>Eliminar</button>
+                <button class='btn btn-warning btnEditar' data-id='${row.id_movimiento}'>Editar</button>
+                <button class='btn btn-danger btnEliminar' data-id='${row.id_movimiento}'>Eliminar</button>
             `
             });
         }
@@ -179,7 +180,7 @@ $(document).ready(async function () {
             },
             order: [[0, 'desc']],
             ajax: async (data, callback) => {
-            salidasGlobal = await obtenerSalidas();
+            salidasGlobal = await obtenerMovimiento('salida', tipoProducto);
 
             callback({ data: salidasGlobal });
             },
@@ -189,30 +190,14 @@ $(document).ready(async function () {
 
     async function actualizarTablaEntradas() {
         const paginaActual = tableEntradas.page();
-        const entradas = await obtenerEntradas(); // Obtiene datos actualizados
-        const entradasformateadas = entradasGlobal.map(item => {
-            const fecha = new Date(item.fecha_entrada);
-            const fechaFormateada = fecha.toLocaleString("es-CO", {
-                year: "numeric",
-                day: "2-digit",
-                month: "2-digit",
-                
-                hour: "2-digit",
-                minute: "2-digit"
-            });
-
-            return {
-                ...item,
-                fecha_entrada_formateada: fechaFormateada
-            };
-        });
+        const entradas = await obtenerMovimiento('entrada', tipoProducto); // Obtiene datos actualizados
         tableEntradas.clear().rows.add(entradas).draw();
         tableEntradas.page(paginaActual).draw(false);
     }
 
     async function actualizarTablaSalidas() {
         const paginaActual = tableSalidas.page();
-        const salidas = await obtenerSalidas(); // Obtiene datos actualizados
+        const salidas = await obtenerMovimiento('salida', tipoProducto); // Obtiene datos actualizados
         tableSalidas.clear().rows.add(salidas).draw();
         tableSalidas.page(paginaActual).draw(false);
     }
@@ -227,40 +212,23 @@ $(document).ready(async function () {
     console.log('Iniciando suscripción a productos_updates...');
 
     supabase
-    .channel('entradas_updates') // Nombre del canal, puede ser cualquier string
+    .channel('movimientos_updates') // Nombre del canal, puede ser cualquier string
     .on(
         'postgres_changes',
-        { event: '*', schema: 'inventario', table: 'entradas' },
+        { event: '*', schema: 'inventario', table: 'movimiento_producto' },
         (payload) => {
-            console.log('Cambio detectado en entradas:', payload);
+            console.log('Cambio detectado en movimientos:', payload);
             actualizarTablaEntradas(); // Refresca la tabla sin recargar la página
+            actualizarTablaSalidas();
         }
     )
     .subscribe();
-
-    supabase
-    .channel('salidas_updates') // Nombre del canal, puede ser cualquier string
-    .on(
-        'postgres_changes',
-        { event: '*', schema: 'inventario', table: 'salidas' },
-        (payload) => {
-            console.log('Cambio detectado en salidas:', payload);
-            actualizarTablaSalidas(); // Refresca la tabla sin recargar la página
-        }
-    )
-    .subscribe();
-
-    $('#btnAgregar').click(() => {
-        // Limpiar los campos del formulario
-        $('#formulario')[0].reset();
-        // Mostrar el modal
-        $('#modalFormulario').modal('show');
-    });
 
     let modoEntrada = "agregar";  // Variable para rastrear la acción (agregar o editar)
     let idProductoEditarEntrada = null;  // Guardará el ID del producto a editar
     let modoSalida = "agregar";  // Variable para rastrear la acción (agregar o editar)
     let idProductoEditarSalida = null;  // Guardará el ID del producto a editar
+    
     $('#btnAgregarEntradaSalida').click(async function () {
         modoEntrada = "agregar";  // Cambiamos el modo a "agregar"
         idProductoEditarEntrada = null; // No hay ID, ya que es un producto nuevo
@@ -268,7 +236,7 @@ $(document).ready(async function () {
         $('#formEntradaSalida')[0].reset();
         // Mostrar el modal
         $('#modalEntradaSalida').modal('show');
-        const productos = await obtenerProductos();
+        const productos = await obtenerProductosActivos(tipoProducto);
         console.log("Productos obtenidos:", productos); // Verificar que hay productos
     
         if (!productos || productos.length === 0) {
@@ -292,7 +260,7 @@ $(document).ready(async function () {
         $('#mensajeErrorDatos').hide();
         // Mostrar el modal
         $('#modalSalidaEntrada').modal('show');
-        const productos = await obtenerProductosUnd();
+        const productos = await obtenerProductosActivosExistentes(tipoProducto);
         console.log("Productos obtenidos:", productos); // Verificar que hay productos
     
         if (!productos || productos.length === 0) {
@@ -313,12 +281,13 @@ $(document).ready(async function () {
 
 
     $('#tablaEntradas tbody').on('click', '.btnEditar', async function () {
+
+
         modoEntrada = "editar";  // Cambiamos el modo a "editar"
         idProductoEditarEntrada = $(this).data('id');  // Guardamos el ID del producto a editar
-        
         $('#formEntradaSalida')[0].reset();
 
-        const productos = await obtenerProductos();
+        const productos = await obtenerProductosActivos(tipoProducto);
         console.log("Productos obtenidos:", productos); // Verificar que hay productos
     
         if (!productos || productos.length === 0) {
@@ -333,20 +302,20 @@ $(document).ready(async function () {
            
         });
         console.log("Entradas en entradasGlobal:", entradasGlobal);
-        entradasGlobal = await obtenerEntradas();
-        let entradas = entradasGlobal.find(p => p.id_entrada == idProductoEditarEntrada);
+        entradasGlobal = await obtenerMovimiento('entrada', tipoProducto);
+        let entradas = entradasGlobal.find(p => p.id_movimiento == idProductoEditarEntrada);
         console.log("Entrada seleccionada:", entradas);
-        console.log(entradas.und_entrada,entradas.fecha_entrada,entradas.nombre_producto)
         console.log("Editar producto con ID:", idProductoEditarEntrada); // Para verificar si se captura el ID
         // Llenar el formulario con los datos actuales
         console.log("ID del producto a seleccionar:", entradas.id_producto);
-        $("#cantidad").val(entradas.und_entrada);
+        $("#cantidad").val(entradas.und_movimiento);
             
         setTimeout(() => {
             $('#productoSelect').val(entradas.id_producto).change();  // ✅ Esta línea selecciona el producto correcto
         }, 100); 
         $('#modalEntradaSalida').modal('show');
         //$('#modalVerificar').modal('show');
+     
 
     });
     let unidades_salidas = null;
@@ -355,7 +324,7 @@ $(document).ready(async function () {
         modoSalida = "editar";  // Cambiamos el modo a "editar"
         idProductoEditarSalida = $(this).data('id');  // Guardamos el ID del producto a editar
         
-        const productos = await obtenerProductos();
+        const productos = await obtenerProductosActivos(tipoProducto);
         console.log("Productos obtenidos:", productos); // Verificar que hay productos
     
         if (!productos || productos.length === 0) {
@@ -370,15 +339,15 @@ $(document).ready(async function () {
            
         });
         console.log("Entradas en entradasGlobal:", salidasGlobal);
-        salidasGlobal = await obtenerSalidas();
-        let entradas = salidasGlobal.find(p => p.id_salida == idProductoEditarSalida);
+        salidasGlobal = await obtenerMovimiento('salida', tipoProducto);
+        let entradas = salidasGlobal.find(p => p.id_movimiento == idProductoEditarSalida);
         console.log("Entrada seleccionada:", entradas);
-        console.log(entradas.und_salida,entradas.fecha_salida,entradas.nombre_producto)
+        
         console.log("Editar producto con ID:", idProductoEditarSalida); // Para verificar si se captura el ID
         // Llenar el formulario con los datos actuales
         console.log("ID del producto a seleccionar:", entradas.id_producto);
-        unidades_salidas = entradas.und_salida;
-        $("#cantidad1").val(entradas.und_salida);
+        unidades_salidas = entradas.und_movimiento;
+        $("#cantidad1").val(entradas.und_movimiento);
             
         setTimeout(() => {
         $('#productoSelect1').val(entradas.id_producto).change();  // ✅ Esta línea selecciona el producto correcto
@@ -394,15 +363,14 @@ $(document).ready(async function () {
         const unidades = $('#cantidad').val();
         if (modoEntrada === "agregar") {
             console.log("Se se va a de insertar");
-            await agregarEntrada(idProducto, unidades);
+            await agregarMovimiento('entrada',idProducto, unidades);
         } 
         else if (modoEntrada === "editar" && idProductoEditarEntrada !== null) {
             console.log("Se se va a editar");
-            await actualizarEntrada(idProductoEditarEntrada, idProducto, unidades);
+            await actualizarMovimiento(idProductoEditarEntrada, idProducto, unidades);
         }
         $('#modalEntradaSalida').modal('hide');
         actualizarTablaEntradas(); // Refresca la tabla correctamente
-        entradasGlobal = await obtenerEntradas();
     });
 
     $('#formSalidaEntrada').submit(async function (e) {
@@ -420,7 +388,7 @@ $(document).ready(async function () {
                 
                 return;
             }
-            await agregarSalida(idProducto, unidades);
+            await agregarMovimiento('salida', idProducto, unidades);
 
         } 
         else if (modoSalida === "editar" && idProductoEditarSalida !== null) {
@@ -435,11 +403,10 @@ $(document).ready(async function () {
                 mensajeError(`⚠️ No puedes editar una salida de ${unidades} unidades, solo hay ${stockDisponible} en stock.`);                
                 return;
             }    
-            await actualizarSalida(idProductoEditarSalida, idProducto, unidades);
+            await actualizarMovimiento(idProductoEditarSalida, idProducto, unidades);
         }
         $('#modalSalidaEntrada').modal('hide');
         actualizarTablaSalidas(); // Refresca la tabla correctamente
-        salidasGlobal = await obtenerSalidas();
     });
 
     $('#tablaEntradas tbody').on('click', '.btnEliminar', function () {
@@ -447,7 +414,7 @@ $(document).ready(async function () {
         console.log("Eliminar producto con ID:", id); 
         $('#modalConfirmarEliminar').modal('show');    
         $('#btnConfirmarEliminar').off('click').on('click', async function () {
-            await eliminarEntrada(id);
+            await eliminarMovimiento(id);
             $('#modalConfirmarEliminar').modal('hide');
             actualizarTablaEntradas();
         });
@@ -456,20 +423,11 @@ $(document).ready(async function () {
     $('#tablaSalidas tbody').on('click', '.btnEliminar', function () {
         const id = $(this).data('id');
         console.log("Eliminar producto con ID:", id); 
-    
         $('#modalConfirmarEliminar').modal('show');
-    
-
-    
-        $('#formularioVerificar').off('submit').on('submit', function (e) {
-            e.preventDefault();
-        });
-    
         $('#btnConfirmarEliminar').off('click').on('click', async function () {
-            await eliminarSalida(id);
+            await eliminarMovimiento(id);
             $('#modalConfirmarEliminar').modal('hide');
             actualizarTablaSalidas();
         });
-    });
-    
+    });  
 });

@@ -51,7 +51,7 @@ export async function actualizarMovimiento(id_movimiento, nuevoProducto, nuevasU
     const { data, error } = await supabase
     .schema('inventario')
         .from('movimiento_producto')
-        .update({ id_producto: nuevoProducto, und_movimiento: nuevasUnidades })
+        .update({ id_producto: nuevoProducto , und_movimiento: nuevasUnidades })
         .eq('id_movimiento', id_movimiento)
         .select('*');
 

@@ -1,3 +1,4 @@
+import {supabase} from '../supabase/supabaseCliente.js';
 //CRUD PARA LA TABLA DETALLE PEDIDO
 //CREATE
 export async function agregarDetallePedido(id_pedido, id_producto, cantidad, relleno, mensaje, observaciones, tipoTorta) {
