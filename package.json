@@ -1,7 +1,7 @@
 {
   "name": "foncepan",
   "displayName": "FoncePan",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Gestión FoncePan",
   "main": "main.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "https://foncepan.com/"
+        "url": "https://foncepan.com/updates/uploads/windows/"
       }
     ]
   },
