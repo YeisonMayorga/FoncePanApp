@@ -215,10 +215,12 @@ $(document).ready(async () => {
             return;
         }
         $('#btnDevoluciones').data('despacho-id', despachoActual);
-        const tipo1 = 1, tipo2 = 2, tipo3 = 3;
+        const tipo1 = 1, tipo2 = 2, tipo3 = 3, tipo4 = 4, tipo5 = 5;
         const productos1 = await obtenerDetalleDespacho(despachoActual, tipo1);
         const productos2 = await obtenerDetalleDespacho(despachoActual, tipo2);
         const productos3 = await obtenerDetalleDespacho(despachoActual, tipo3);
+        const productos4 = await obtenerDetalleDespacho(despachoActual, tipo4);
+        const productos5 = await obtenerDetalleDespacho(despachoActual, tipo5);
         const yaExisteDevolucion = await existeDevolucion(despachoActual);
         const cargarProductos = (productos, cuerpoSelector) => {
             const cuerpo = $(cuerpoSelector);
@@ -247,6 +249,8 @@ $(document).ready(async () => {
         cargarProductos(productos1, '#tablaDetalleSucursal tbody');
         cargarProductos(productos2, '#tablaDetalleSucursal2 tbody');
         cargarProductos(productos3, '#tablaDetalleSucursal3 tbody');
+        cargarProductos(productos4, '#tablaDetalleSucursal4 tbody');
+        cargarProductos(productos5, '#tablaDetalleSucursal5 tbody');
         $('#btnConfirmarRecepcion').toggle(estadoDespachoActual === 'enviado');
         $('#btnDevoluciones').toggle(estadoDespachoActual === 'finalizado' && !yaExisteDevolucion);
         const modal = new bootstrap.Modal(document.getElementById('modalDetalleSucursal'));
@@ -325,7 +329,7 @@ $(document).ready(async () => {
         $('#tablaDespachosSucursal').DataTable().ajax.reload();
     });
 });
-import { obtenerProductosnTrue1, obtenerProductosnTrue2, obtenerProductosnTrue3, crearDespachoConDetalles } from './app.js';
+import { obtenerProductosnTrue1, obtenerProductosnTrue2, obtenerProductosnTrue3, obtenerProductosnTrue4, obtenerProductosnTrue5, crearDespachoConDetalles } from './app.js';
 supabase
     .channel('productos_updates') // Nombre del canal, puede ser cualquier string
     .on(
@@ -341,13 +345,19 @@ async function cargarTablasProductos() {
     const productosDisponibles1 = await obtenerProductosnTrue1();
     const productosDisponibles2 = await obtenerProductosnTrue2();
     const productosDisponibles3 = await obtenerProductosnTrue3();
-    console.log("Productos true", productosDisponibles1);
+    const productosDisponibles4 = await obtenerProductosnTrue4();
+    const productosDisponibles5 = await obtenerProductosnTrue5();
+    console.log("Productos true", productosDisponibles4);
     const cuerpo1 = $('#tablaProductosSolicitud1 tbody');
     const cuerpo2 = $('#tablaProductosSolicitud2 tbody');
     const cuerpo3 = $('#tablaProductosSolicitud3 tbody');
+    const cuerpo4 = $('#tablaProductosSolicitud4 tbody');
+    const cuerpo5 = $('#tablaProductosSolicitud5 tbody');
     cuerpo1.empty();
     cuerpo2.empty();
     cuerpo3.empty();
+    cuerpo4.empty();
+    cuerpo5.empty();
     productosDisponibles1.forEach(p => {
         cuerpo1.append(`
         <tr>
@@ -390,7 +400,34 @@ async function cargarTablasProductos() {
         </tr>
         `);
     });
-
+    productosDisponibles4.forEach(p => {
+        cuerpo4.append(`
+        <tr>
+            <td>${p.nombre_producto}</td>
+            <td>${p.provedor_producto}</td>
+            <td>${p.nombre_um}</td>
+            <td>${p.und_producto}</td>
+            <td>
+            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
+            <div class="invalid-feedback d-none"></div>
+            </td>
+        </tr>
+        `);
+    });
+    productosDisponibles5.forEach(p => {
+        cuerpo5.append(`
+        <tr>
+            <td>${p.nombre_producto}</td>
+            <td>${p.provedor_producto}</td>
+            <td>${p.nombre_um}</td>
+            <td>${p.und_producto}</td>
+            <td>
+            <input type="number" class="form-control form-control-sm cantidad-solicitada" data-id="${p.id_producto}" data-stock="${p.und_producto}" min="0" value="0">
+            <div class="invalid-feedback d-none"></div>
+            </td>
+        </tr>
+        `);
+    });    
 
 
     // Re-aplicar filtro si existe
@@ -422,7 +459,7 @@ async function cargarTablasProductos() {
 $(document).on('input', '#buscadorProductos', function () {
     const texto = $(this).val().toLowerCase();
     // Filtra todas las filas de las 3 tablas
-    ['#tablaProductosSolicitud1', '#tablaProductosSolicitud2', '#tablaProductosSolicitud3'].forEach(id => {
+    ['#tablaProductosSolicitud1', '#tablaProductosSolicitud2', '#tablaProductosSolicitud3', '#tablaProductosSolicitud4', '#tablaProductosSolicitud5'].forEach(id => {
         $(`${id} tbody tr`).each(function () {
             const fila = $(this);
             const textoFila = fila.text().toLowerCase();

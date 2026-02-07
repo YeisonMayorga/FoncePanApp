@@ -274,7 +274,7 @@ $(document).ready(async () => {
         idDespachoSeleccionado = idDespacho;
         estadoDespachoActual = estadoDespacho;
         console.log(idDespachoSeleccionado);
-        const tipo1 = 1, tipo2 = 2, tipo3 = 3;
+        const tipo1 = 1, tipo2 = 2, tipo3 = 3, tipo4 = 4, tipo5 = 5;
         const productos1 = await obtenerDetalleDespacho(idDespachoSeleccionado, tipo1);
         const cuerpo1 = $('#tablaDetalleProductos tbody');
         cuerpo1.empty();
@@ -324,6 +324,50 @@ $(document).ready(async () => {
         cuerpo3.empty();
         productos3.forEach(p => {
             cuerpo3.append(`
+                <tr>
+                    <td>${p.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</td>
+                    <td>${p.productosn.und_producto}</td>
+                    <td>${p.cantidad_solicitada}</td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm cantidad-enviada" 
+                        data-id="${p.id_detalle_despacho}" 
+                        data-stock="${p.productosn.und_producto}" 
+                        value="${p.cantidad_enviada || 0}" 
+                        ${['enviado', 'recibido', 'finalizado'].includes(estadoDespachoActual) ? 'disabled' : ''}
+                        >
+                        <div class="invalid-feedback d-none"></div>
+                    </td>
+                    <td>${p.cantidad_recibida ?? '-'}</td>
+                </tr>
+            `);
+        });
+        const productos4 = await obtenerDetalleDespacho(idDespachoSeleccionado, tipo4);
+        const cuerpo4 = $('#tablaDetalleProductos4 tbody');
+        cuerpo4.empty();
+        productos4.forEach(p => {
+            cuerpo4.append(`
+                <tr>
+                    <td>${p.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</td>
+                    <td>${p.productosn.und_producto}</td>
+                    <td>${p.cantidad_solicitada}</td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm cantidad-enviada" 
+                        data-id="${p.id_detalle_despacho}" 
+                        data-stock="${p.productosn.und_producto}" 
+                        value="${p.cantidad_enviada || 0}" 
+                        ${['enviado', 'recibido', 'finalizado'].includes(estadoDespachoActual) ? 'disabled' : ''}
+                        >
+                        <div class="invalid-feedback d-none"></div>
+                    </td>
+                    <td>${p.cantidad_recibida ?? '-'}</td>
+                </tr>
+            `);
+        });
+        const productos5 = await obtenerDetalleDespacho(idDespachoSeleccionado, tipo5);
+        const cuerpo5 = $('#tablaDetalleProductos5 tbody');
+        cuerpo5.empty();
+        productos5.forEach(p => {
+            cuerpo5.append(`
                 <tr>
                     <td>${p.nombre_producto} - ${p.productosn.provedor_producto} - ${p.productosn.unidad_medida.nombre_um}</td>
                     <td>${p.productosn.und_producto}</td>

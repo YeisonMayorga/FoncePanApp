@@ -1,18 +1,22 @@
-import { obtenerProductosnTrue1, obtenerProductosnTrue2, obtenerProductosnTrue3, obtenerProductosnEstado, actualizarProductonTrue } from './app.js';
+import { obtenerProductosnTrue1, obtenerProductosnTrue2, obtenerProductosnTrue3, obtenerProductosnTrue4, obtenerProductosnTrue5, obtenerProductosnEstado, actualizarProductonTrue } from './app.js';
 let tablaActivos1, tablaModificar;
 let productosEstado = [];
 
 async function cargarTablasProductosActivos() {
     try {
-    const [productosDisponibles1, productosDisponibles2, productosDisponibles3] = await Promise.all([
+    const [productosDisponibles1, productosDisponibles2, productosDisponibles3, productosDisponibles4, productosDisponibles5] = await Promise.all([
         obtenerProductosnTrue1(),
         obtenerProductosnTrue2(),
-        obtenerProductosnTrue3()
+        obtenerProductosnTrue3(),
+        obtenerProductosnTrue4(),
+        obtenerProductosnTrue5()
     ]);
 
     const cuerpo1 = $('#tablaActivos1 tbody').empty();
     const cuerpo2 = $('#tablaActivos2 tbody').empty();
     const cuerpo3 = $('#tablaActivos3 tbody').empty();
+    const cuerpo4 = $('#tablaActivos4 tbody').empty();
+    const cuerpo5 = $('#tablaActivos5 tbody').empty();
 
     const renderFila = (p) => `
         <tr>
@@ -28,6 +32,8 @@ async function cargarTablasProductosActivos() {
     productosDisponibles1.forEach(p => cuerpo1.append(renderFila(p)));
     productosDisponibles2.forEach(p => cuerpo2.append(renderFila(p)));
     productosDisponibles3.forEach(p => cuerpo3.append(renderFila(p)));
+    productosDisponibles4.forEach(p => cuerpo4.append(renderFila(p)));
+    productosDisponibles5.forEach(p => cuerpo5.append(renderFila(p)));
 
     } catch (error) {
     console.error("Error cargando productos activos:", error);
@@ -54,10 +60,10 @@ async function cargarProductosEstado() {
             class="form-control tipo-producto" 
             data-id="${prod.id_producto}" 
             min="1" 
-            max="3" 
+            max="5" 
             step="1" 
             value="${prod.tipo}" 
-            oninput="this.value = (this.value > 3 ? 3 : (this.value < 1 ? 1 : this.value))">`
+            oninput="this.value = (this.value > 5 ? 5 : (this.value < 1 ? 1 : this.value))">`
     ]);
     });
 

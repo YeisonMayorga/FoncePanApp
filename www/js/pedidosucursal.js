@@ -1,5 +1,5 @@
 import { obtenerPedidoSucursal } from '../backend/endpoints/pedidoBackend.js';
-import {supabase} from '../supabase/supabaseCliente.js';
+import {supabase} from '../backend/supabase/supabaseCliente.js';
 import {  } from '../backend/endpoints/detallePedidoBackend.js';
 
 $(document).ready(async () => {

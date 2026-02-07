@@ -572,6 +572,36 @@ export async function obtenerProductosnTrue3() {
     }
     return data;
 }
+export async function obtenerProductosnTrue4() {
+    const { data, error } = await supabase
+    .schema('inventario')    
+    .from('vista_productosntrue') // Reemplaza con tu tabla o vista real
+    .select('*')
+    .eq('activo', true)
+    .eq('tipo', 4)
+    .gt('und_producto', 0) // Agregada la nueva condición
+    .order('nombre_producto', { ascending: true });
+    if (error) {
+        console.error('Error al obtener productos true:', error);
+        return { success: false, error };
+    }
+    return data;
+}
+export async function obtenerProductosnTrue5() {
+    const { data, error } = await supabase
+    .schema('inventario')    
+    .from('vista_productosntrue') // Reemplaza con tu tabla o vista real
+    .select('*')
+    .eq('activo', true)
+    .eq('tipo', 5)
+    .gt('und_producto', 0) // Agregada la nueva condición
+    .order('nombre_producto', { ascending: true });
+    if (error) {
+        console.error('Error al obtener productos true:', error);
+        return { success: false, error };
+    }
+    return data;
+}
 //Actualizar estado de los productosn
 export async function actualizarProductonTrue(id_producto, newActivo, newTipo) {
     const { data, error } = await supabase
